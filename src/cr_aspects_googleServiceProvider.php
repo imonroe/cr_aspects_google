@@ -13,7 +13,7 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       //parent::boot();
+        //parent::boot();
         // Migrations:
         $this->loadMigrationsFrom(__DIR__.'/migrations');
 
@@ -25,6 +25,10 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
 
         // Routes:
         $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        $preferences_registry = app()->make('ApplicationPreferencesRegistry');
+        $google_pref = ['preference' => 'google_aspects_enabled', 'preference_label' => 'Enable Google Aspect Types?', 'field_type' => 'checkbox', 'default_value' => False ];
+        $preferences_registry->register_preference($google_pref);
     }
 
     /**

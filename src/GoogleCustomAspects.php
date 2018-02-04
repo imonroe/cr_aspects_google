@@ -2,7 +2,7 @@
 
 namespace imonroe\cr_aspects_google;
 
-class GoogleContactsAPIResultsAspect extends \App\APIResultAspect{
+class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResultAspect{
 	public function notes_schema(){
 		return parent::notes_schema();
 	}
