@@ -27,57 +27,127 @@ use Carbon\Carbon;
 use Snoopy\Snoopy;
 
 class GoogleController extends Controller{
+	protected $google_config;
 	protected $client;
 	protected $user;
+	
 	public function __construct(){
-		// Hey, if we have an actual user request, we want to use a session variable for
-		// token information.  If, however, this is an automated call, say from a parse
-		// function, we will need to retrieve the user's token information from the database
-		// and build a client based on that.
 
-		if (!is_null(session('user_data'))){
-			$user_data = session('user_data');
+		$this->user = Auth::user();
+		
+		$app_config = app('config')->get('services');
+		if ( !empty($app_config['google']) ){
+			
+			$this->google_config = $app_config['google'];
+			$client = new Google_Client();
+			$client->setApplicationName( $this->google_config['application_name'] );
+			$client->setAuthConfig( $this->google_config['auth_config_file'] );
+			
+			$client->addScope("https://www.googleapis.com/auth/drive");
+			$client->addScope("https://www.googleapis.com/auth/calendar");
+			$client->addScope("https://www.googleapis.com/auth/tasks");
+			$client->addScope("https://www.googleapis.com/auth/userinfo.email");
+			$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
+			$client->addScope("https://www.google.com/m8/feeds/");
+
+			$client->setClientId( $this->google_config['client_id'] );
+			$client->setClientSecret( $this->google_config['client_secret'] );
+			$client->setDeveloperKey( $this->google_config['public_api_key'] );
+			$client->setAccessType("offline");
+
+			$client->setRedirectUri( Ana::current_page_url() );
+			//$auth_url = $client->createAuthUrl();
+			
+			$this->client = $client;
+
 		} else {
-			// You can't use the Auth:: middleware in a constructor after Laravel 5.2
-			// Thus, we'll manually authorize the primary user of the app, and use the stored cookie info.
-			// See: https://stackoverflow.com/questions/44445059/laravel-5-4-sessions-and-authuser-not-available-in-controllers-constructor#44445437
-			$current_user = auth()->loginUsingId(1);
-			$user_data = unserialize($current_user->google_token);
+			throw \Exception('No Google configuration found.');
+		}
+		
+
+	}
+
+	public function build_client(){
+		
+		if ( !empty($this->user->google_token) ) {
+			// We have a token in the database.
+			$google_client_token = json_decode( $this->user->google_token, true );
+		} else {
+
+			if (isset($_GET['code'])) {
+				$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+				$user_data['token'] = $google_client_token['access_token'];
+				$user_data['refreshToken'] = $google_client_token['refresh_token'];
+				$user_data['expiresIn'] = $google_client_token['expires_in'];
+			
+				$this->user->google_token = json_encode($user_data);
+				$this->user->save();
+	
+				// dd($token);
+	
+				// $client->setAccessToken($token);
+				// store in the session also
+				// $_SESSION['upload_token'] = $token;
+				// redirect back to the example
+				header('Location: ' . filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL) );
+			
+			} else {
+
+				return redirect( $this->client->createAuthUrl() );
+			
+			}
+			
 		}
 
-		if (empty($user_data)){
-			return redirect('/auth/google');
-		}
-		$google_client_token = [
-			'access_token' => $user_data['token'],
-			'refresh_token' => $user_data['refreshToken'],
-			'expires_in' => $user_data['expiresIn'],
-		];
+		dd($google_client_token);
 
-		$client = new Google_Client();
-		$client->setApplicationName(env('GOOGLE_API_APP_NAME'));
-		$client->setClientId( env('GOOGLE_API_CLIENT_ID') );
-		$client->setClientSecret( env('GOOGLE_API_CLIENT_SECRET') );
-		$client->setDeveloperKey(env('GOOGLE_API_PUBLIC_API_KEY'));
-		$client->setAccessType("offline");
+		/**
+		 * We would really like a client token that looks like: 
+		 * 
+		 * $google_client_token = [
+		 * 'access_token' => $user_data['token'],
+		 * 'refresh_token' => $user_data['refreshToken'],
+		 * 'expires_in' => $user_data['expiresIn'],
+		 * ];
+		 * 
+		 */
+
+
 		$client->setAccessToken(json_encode($google_client_token));
 
 		if($client->isAccessTokenExpired()){
 			$client->setAccessType("refresh_token");
 			$client->refreshToken($google_client_token['refresh_token']);
 			$new_token = $client->getAccessToken();
+			
 			$user_data['token'] = $new_token['access_token'];
 			$user_data['refreshToken'] = $new_token['refresh_token'];
 			$user_data['expiresIn'] = $new_token['expires_in'];
-			$primary_user = \App\User::where('email', env('APP_PRIMARY_USER_EMAIL'))->first();
-			$primary_user->google_token = serialize($user_data);
-			$primary_user->save();
+			
+			$this->user->google_token = json_encode($user_data);
+			$this->user->save();
+			
 			if ( !is_null( session()->all() ) ){
 				session( [ 'user_data' => $user_data ] );
 			}
 		}
-		$this->client = $client;
+			
+		
+
 	}
+
+	/**
+	 * We want to handle callbacks from Google, so we can set the user's tokens and such.
+	 * This means that we have to have the user stored in the __construct() method, as a protected
+	 * attribute on this controller object.
+	 */
+	public function handle_provider_callback(Request $request){
+
+		
+
+	}
+
 
 	// Tasks stuff.
 	public function task_list($task_list_id='@default'){

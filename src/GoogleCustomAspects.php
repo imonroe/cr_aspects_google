@@ -2,6 +2,8 @@
 
 namespace imonroe\cr_aspects_google;
 
+use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
+
 class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResultAspect{
 	public function notes_schema(){
 		return parent::notes_schema();
@@ -215,7 +217,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
-		$lists_agent =  new \App\Http\Controllers\GoogleController;
+		$lists_agent =  new GoogleController;
 		$output = '';
 		$lists_object = $lists_agent->get_all_task_lists();
 		$lists_array = $lists_object->items;
