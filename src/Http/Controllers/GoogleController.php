@@ -60,6 +60,57 @@ class GoogleController extends Controller{
 			
 			$this->client = $client;
 
+
+			// We now have a client object, let's try to build our token;
+
+			if ( !empty($this->user->google_token) ) {
+				// We have a token in the database.
+				$google_client_token = json_decode( $this->user->google_token, true );
+			} else {
+	
+				if (isset($_GET['code'])) {
+					$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+	
+					$user_data['token'] = $google_client_token['access_token'];
+					$user_data['refreshToken'] = $google_client_token['refresh_token'];
+					$user_data['expiresIn'] = $google_client_token['expires_in'];
+				
+					$this->user->google_token = json_encode($user_data);
+					$this->user->save();
+
+					header('Location: ' . filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL) );
+				
+				} else {
+	
+					return redirect( $this->client->createAuthUrl() );
+				
+				}
+				
+			}
+	
+			dd($google_client_token);
+
+			$client->setAccessToken(json_encode($google_client_token));
+
+			if($client->isAccessTokenExpired()){
+				$client->setAccessType("refresh_token");
+				$client->refreshToken($google_client_token['refresh_token']);
+				$new_token = $client->getAccessToken();
+				
+				$user_data['token'] = $new_token['access_token'];
+				$user_data['refreshToken'] = $new_token['refresh_token'];
+				$user_data['expiresIn'] = $new_token['expires_in'];
+				
+				$this->user->google_token = json_encode($user_data);
+				$this->user->save();
+				
+				if ( !is_null( session()->all() ) ){
+					session( [ 'user_data' => $user_data ] );
+				}
+			}
+
+			//$this->build_client();
+
 		} else {
 			throw \Exception('No Google configuration found.');
 		}
@@ -69,38 +120,7 @@ class GoogleController extends Controller{
 
 	public function build_client(){
 		
-		if ( !empty($this->user->google_token) ) {
-			// We have a token in the database.
-			$google_client_token = json_decode( $this->user->google_token, true );
-		} else {
-
-			if (isset($_GET['code'])) {
-				$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-
-				$user_data['token'] = $google_client_token['access_token'];
-				$user_data['refreshToken'] = $google_client_token['refresh_token'];
-				$user_data['expiresIn'] = $google_client_token['expires_in'];
-			
-				$this->user->google_token = json_encode($user_data);
-				$this->user->save();
-	
-				// dd($token);
-	
-				// $client->setAccessToken($token);
-				// store in the session also
-				// $_SESSION['upload_token'] = $token;
-				// redirect back to the example
-				header('Location: ' . filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL) );
-			
-			} else {
-
-				return redirect( $this->client->createAuthUrl() );
-			
-			}
-			
-		}
-
-		dd($google_client_token);
+		
 
 		/**
 		 * We would really like a client token that looks like: 
@@ -114,24 +134,7 @@ class GoogleController extends Controller{
 		 */
 
 
-		$client->setAccessToken(json_encode($google_client_token));
-
-		if($client->isAccessTokenExpired()){
-			$client->setAccessType("refresh_token");
-			$client->refreshToken($google_client_token['refresh_token']);
-			$new_token = $client->getAccessToken();
-			
-			$user_data['token'] = $new_token['access_token'];
-			$user_data['refreshToken'] = $new_token['refresh_token'];
-			$user_data['expiresIn'] = $new_token['expires_in'];
-			
-			$this->user->google_token = json_encode($user_data);
-			$this->user->save();
-			
-			if ( !is_null( session()->all() ) ){
-				session( [ 'user_data' => $user_data ] );
-			}
-		}
+		
 			
 		
 
