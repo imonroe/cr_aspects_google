@@ -35,9 +35,9 @@ class GoogleController extends Controller{
 	
 	function __construct(){
 		$this->middleware(function ($request, $next) {
-			$response = $next($request);
+			
 
-			$this->user = Auth::user();
+			$this->user = auth()->user();
 			$app_config = app('config')->get('services');
 			if ( !empty($app_config['google']) ){
 				$this->google_config = $app_config['google'];
@@ -91,7 +91,7 @@ class GoogleController extends Controller{
 				throw \Exception('No Google configuration found.');
 			}
 			
-			return $next($response);
+			return $next($request);
 		 });	
 	}
 
