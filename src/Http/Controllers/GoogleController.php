@@ -92,11 +92,11 @@ class GoogleController extends Controller{
 				$auth_url = $this->client->createAuthUrl();
 				Redirect::to($auth_url)->send();
 			}
-			$client->setAccessToken(json_encode($google_client_token));
-			if($client->isAccessTokenExpired()){
-				$client->setAccessType("refresh_token");
-				$client->refreshToken($google_client_token['refresh_token']);
-				$new_token = $client->getAccessToken();
+			$this->client->setAccessToken(json_encode($google_client_token));
+			if($this->client->isAccessTokenExpired()){
+				$this->client->setAccessType("refresh_token");
+				$this->client->refreshToken($google_client_token['refresh_token']);
+				$new_token = $this->client->getAccessToken();
 				$this->user->google_token = json_encode($new_token);
 				$this->user->save();
 			}
