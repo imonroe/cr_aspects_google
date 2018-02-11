@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 use Google_Client;
 use Google_Service_Tasks;
@@ -72,6 +73,8 @@ class GoogleController extends Controller{
 	}
 
 	public function build_client(){
+		// session([ 'oauth_redirect_request' => Ana::current_page_url() ]);
+		// Session::put('oauth_redirect_request', Ana::current_page_url());
 		// We need a user object.
 		if (Auth::check()){
 			$this->user = Auth::user();
@@ -81,9 +84,7 @@ class GoogleController extends Controller{
 		 
 		$app_config = app('config')->get('services');
 		if ( !empty( $this->client ) ){
-			session(['oauth_redirect_request' => Ana::current_page_url()]);
-			// We now have a client object, let's try to build our token;
-			if ( !is_null($this->user->google_token) ) {
+			if ( !empty($this->user->google_token) ) {
 				// We have a token in the database.
 				$google_client_token = json_decode( $this->user->google_token, true );
 			} else {
@@ -91,66 +92,18 @@ class GoogleController extends Controller{
 				$auth_url = $this->client->createAuthUrl();
 				Redirect::to($auth_url)->send();
 			}
-	
-			dd('build client break', $google_client_token);
-
 			$client->setAccessToken(json_encode($google_client_token));
-
 			if($client->isAccessTokenExpired()){
 				$client->setAccessType("refresh_token");
 				$client->refreshToken($google_client_token['refresh_token']);
 				$new_token = $client->getAccessToken();
-				
-				$user_data['token'] = $new_token['access_token'];
-				$user_data['refreshToken'] = $new_token['refresh_token'];
-				$user_data['expiresIn'] = $new_token['expires_in'];
-				
-				$this->user->google_token = json_encode($user_data);
+				$this->user->google_token = json_encode($new_token);
 				$this->user->save();
-				
-				if ( !is_null( session()->all() ) ){
-					session( [ 'user_data' => $user_data ] );
-				}
 			}
 		} else {
 			throw \Exception('No Google client available.');
 		}	
 	}
-
-	/**
-	 * We want to handle callbacks from Google, so we can set the user's tokens and such.
-	 * This means that we have to have the user stored in the __construct() method, as a protected
-	 * attribute on this controller object.
-	 */
-	public function handle_provider_callback(){
-		$req = request();
-		dd($req);
-
-		die();
-
-		if (Auth::check()){
-			$this->user = Auth::user();
-		} else {
-			throw \Exception('User not logged in.');
-		}
-
-		if ( !empty($request->query('code')) ) {
-
-			$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-			$user_data['token'] = $google_client_token['access_token'];
-			$user_data['refreshToken'] = $google_client_token['refresh_token'];
-			$user_data['expiresIn'] = $google_client_token['expires_in'];
-
-			$this->user->google_token = json_encode($user_data);
-			$this->user->save();
-			//$original_url = filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL);
-			Redirect::to($original_url)->send();
-			die();
-
-		}
-
-	}
-
 
 	// Tasks stuff.
 	public function task_list($task_list_id='@default'){

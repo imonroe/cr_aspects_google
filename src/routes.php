@@ -1,7 +1,8 @@
 <?php 
 
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 
 Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
@@ -9,7 +10,6 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
         Route::middleware(['auth', 'web'])->group(
             function () {
                 // Google API routes
-                
                 // OAuth2 Callback route first.
                 Route::get('auth/google/callback', 'GoogleController@handle_provider_callback');
 
@@ -33,13 +33,10 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                     $google_client_token = $client->getAccessToken();
                     $user->google_token = json_encode($google_client_token);
                     $user->save();
-
-                    echo( 'I think I should send you to: '.session()->get('oauth_redirect_request') );
-
                 } else {
                     throw \Exception('Couldn\'t get a token from Google.');
                 }
-                dd($req, $session, $user, $client);
+                Redirect::to('home/')->send();
             });
 
         });
