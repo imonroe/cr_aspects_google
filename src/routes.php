@@ -2,6 +2,7 @@
 
 
 use Illuminate\Http\Request;
+use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 
 Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
     function () {
@@ -19,5 +20,16 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
 				Route::post('gcal', 'GoogleController@edit_calendar');
             }
         );
+        Route::middleware(['web'])->group(function(){
+
+            Route::get('auth/google/callback', function(){
+                    $req = request();
+                    $session = $req->session();
+                    $user = Auth::user();
+                    $client = GoogleController::get_client();
+                    dd($req, $session, $user, $client);
+            });
+
+        });
     }
 );

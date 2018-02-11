@@ -40,6 +40,34 @@ class GoogleController extends Controller{
 		// });
 		// $this->build_client();
 		// dd('Middleware break', $this);
+		$app_config = app('config')->get('services');
+		if ( !empty($app_config['google']) ){
+			$this->google_config = $app_config['google'];
+			$scopes = [
+				"https://www.googleapis.com/auth/drive",
+				"https://www.googleapis.com/auth/calendar",
+				"https://www.googleapis.com/auth/tasks",
+				"https://www.googleapis.com/auth/userinfo.email",
+				"https://www.googleapis.com/auth/userinfo.profile",
+				"https://www.google.com/m8/feeds/",
+			];
+			$client = new Google_Client();
+			$client->setApplicationName( $this->google_config['application_name'] );
+			$client->setAuthConfig( $this->google_config['auth_config_file'] );
+			$client->addScope($scopes);
+			$client->setClientId( $this->google_config['client_id'] );
+			$client->setClientSecret( $this->google_config['client_secret'] );
+			$client->setDeveloperKey( $this->google_config['public_api_key'] );
+			$client->setAccessType("offline");
+			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
+			$this->client = $client;
+		} else {
+			throw \Exception('No Google Configuration found.');
+		}
+	}
+
+	public static function get_client(){
+		return self::client;
 	}
 
 	public function build_client(){
@@ -51,23 +79,7 @@ class GoogleController extends Controller{
 		}
 		 
 		$app_config = app('config')->get('services');
-		if ( !empty($app_config['google']) ){
-			$this->google_config = $app_config['google'];
-			$client = new Google_Client();
-			$client->setApplicationName( $this->google_config['application_name'] );
-			$client->setAuthConfig( $this->google_config['auth_config_file'] );
-			$client->addScope("https://www.googleapis.com/auth/drive");
-			$client->addScope("https://www.googleapis.com/auth/calendar");
-			$client->addScope("https://www.googleapis.com/auth/tasks");
-			$client->addScope("https://www.googleapis.com/auth/userinfo.email");
-			$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
-			$client->addScope("https://www.google.com/m8/feeds/");
-			$client->setClientId( $this->google_config['client_id'] );
-			$client->setClientSecret( $this->google_config['client_secret'] );
-			$client->setDeveloperKey( $this->google_config['public_api_key'] );
-			$client->setAccessType("offline");
-			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
-			$this->client = $client;
+		if ( !empty( $this->client ) ){
 
 			// We now have a client object, let's try to build our token;
 			if ( !is_null($this->user->google_token) ) {
@@ -100,7 +112,7 @@ class GoogleController extends Controller{
 				}
 			}
 		} else {
-			throw \Exception('No Google configuration found.');
+			throw \Exception('No Google client available.');
 		}	
 	}
 
@@ -114,7 +126,7 @@ class GoogleController extends Controller{
 		dd($req);
 
 		die();
-		
+
 		if (Auth::check()){
 			$this->user = Auth::user();
 		} else {
@@ -226,8 +238,8 @@ class GoogleController extends Controller{
 		}
 	}
 	
-	public function get_all_task_lists(Request $request){
-		$this->build_client($request);
+	public function get_all_task_lists(){
+		$this->build_client();
 		$tasksService = new Google_Service_Tasks($this->client);
  		$tasklists = $tasksService->tasklists->listTasklists();
 		return $tasklists;
