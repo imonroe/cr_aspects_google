@@ -24,10 +24,20 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
 
             Route::get('auth/google/callback', function(){
                     $req = request();
+                    $code = $req->query('code');
                     $session = $req->session();
                     $user = Auth::user();
                     $gc = new GoogleController;
                     $client = $gc->get_client();
+
+                    if ( !empty($code) && !empty($user) && !empty($user) ){
+                        $client->authenticate($code);
+                        $access_token = $client->getAccessToken();
+                        dd($access_token);
+                    } else {
+                        throw \Exception('Couldn\'t get a token from Google.');
+                    }
+
                     dd($req, $session, $user, $client);
             });
 
