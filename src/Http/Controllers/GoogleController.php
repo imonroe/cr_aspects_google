@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+
 use Google_Client;
 use Google_Service_Tasks;
 use Google_Service_Tasks_Task;
@@ -31,7 +33,7 @@ class GoogleController extends Controller{
 	protected $client;
 	protected $user;
 	
-	public function __construct(){
+	function __construct(){
 
 		$this->user = Auth::user();
 		
@@ -55,37 +57,18 @@ class GoogleController extends Controller{
 			$client->setDeveloperKey( $this->google_config['public_api_key'] );
 			$client->setAccessType("offline");
 
-			$client->setRedirectUri( Ana::current_page_url() );
-			//$auth_url = $client->createAuthUrl();
-			
+			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
 			$this->client = $client;
 
 
 			// We now have a client object, let's try to build our token;
-
-			if ( !empty($this->user->google_token) ) {
+			if ( !is_null($this->user->google_token) ) {
 				// We have a token in the database.
 				$google_client_token = json_decode( $this->user->google_token, true );
 			} else {
-	
-				if (isset($_GET['code'])) {
-					$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-	
-					$user_data['token'] = $google_client_token['access_token'];
-					$user_data['refreshToken'] = $google_client_token['refresh_token'];
-					$user_data['expiresIn'] = $google_client_token['expires_in'];
-				
-					$this->user->google_token = json_encode($user_data);
-					$this->user->save();
-
-					header('Location: ' . filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL) );
-				
-				} else {
-	
-					return redirect( $this->client->createAuthUrl() );
-				
-				}
-				
+				// There is no token in the 
+				$auth_url = $this->client->createAuthUrl();
+				Redirect::to($auth_url)->send();
 			}
 	
 			dd($google_client_token);
@@ -146,8 +129,21 @@ class GoogleController extends Controller{
 	 * attribute on this controller object.
 	 */
 	public function handle_provider_callback(Request $request){
+		dd($request);
+		if ( !empty($request->query('code')) ) {
 
-		
+			$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+			$user_data['token'] = $google_client_token['access_token'];
+			$user_data['refreshToken'] = $google_client_token['refresh_token'];
+			$user_data['expiresIn'] = $google_client_token['expires_in'];
+
+			$this->user->google_token = json_encode($user_data);
+			$this->user->save();
+			//$original_url = filter_var( Ana::current_page_url(), FILTER_SANITIZE_URL);
+			Redirect::to($original_url)->send();
+			die();
+
+		}
 
 	}
 

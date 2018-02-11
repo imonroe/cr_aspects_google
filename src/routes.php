@@ -7,7 +7,11 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
     function () {
         Route::middleware(['auth', 'web'])->group(
             function () {
-				// Google API routes
+                // Google API routes
+                
+                // OAuth2 Callback route first.
+                Route::get('/auth/google/callback', 'GoogleController@handle_provider_callback');
+
 				Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
 				Route::get('gtasks/', 'GoogleController@display_task_list');
 				Route::post('gtasks', 'GoogleController@edit_task_list');
