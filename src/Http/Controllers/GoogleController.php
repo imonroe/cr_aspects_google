@@ -75,7 +75,7 @@ class GoogleController extends Controller{
 				Redirect::to($auth_url)->send();
 			}
 	
-			dd($google_client_token);
+			dd('build client break', $google_client_token);
 
 			$client->setAccessToken(json_encode($google_client_token));
 
