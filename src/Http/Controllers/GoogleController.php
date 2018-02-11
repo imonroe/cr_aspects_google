@@ -42,16 +42,14 @@ class GoogleController extends Controller{
 		// dd('Middleware break', $this);
 	}
 
-	public function build_client(Request $request){
+	public function build_client(){
 		// We need a user object.
-
 		if (Auth::check()){
 			$this->user = Auth::user();
 		} else {
 			throw \Exception('User not logged in.');
 		}
 		 
-
 		$app_config = app('config')->get('services');
 		if ( !empty($app_config['google']) ){
 			$this->google_config = $app_config['google'];
@@ -76,7 +74,7 @@ class GoogleController extends Controller{
 				// We have a token in the database.
 				$google_client_token = json_decode( $this->user->google_token, true );
 			} else {
-				// There is no token in the 
+				// There is no token in the database.
 				$auth_url = $this->client->createAuthUrl();
 				Redirect::to($auth_url)->send();
 			}
@@ -111,9 +109,12 @@ class GoogleController extends Controller{
 	 * This means that we have to have the user stored in the __construct() method, as a protected
 	 * attribute on this controller object.
 	 */
-	public function handle_provider_callback(Request $request){
-		dd($request);
+	public function handle_provider_callback(){
+		$req = request();
+		dd($req);
 
+		die();
+		
 		if (Auth::check()){
 			$this->user = Auth::user();
 		} else {
@@ -225,8 +226,8 @@ class GoogleController extends Controller{
 		}
 	}
 	
-	public function get_all_task_lists(){
-		$this->build_client();
+	public function get_all_task_lists(Request $request){
+		$this->build_client($request);
 		$tasksService = new Google_Service_Tasks($this->client);
  		$tasklists = $tasksService->tasklists->listTasklists();
 		return $tasklists;

@@ -10,7 +10,7 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                 // Google API routes
                 
                 // OAuth2 Callback route first.
-                Route::get('/auth/google/callback', 'GoogleController@handle_provider_callback');
+                Route::get('auth/google/callback', 'GoogleController@handle_provider_callback');
 
 				Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
 				Route::get('gtasks/', 'GoogleController@display_task_list');
