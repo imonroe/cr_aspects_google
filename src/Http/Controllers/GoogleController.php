@@ -66,8 +66,8 @@ class GoogleController extends Controller{
 		}
 	}
 
-	public static function get_client(){
-		return self::client;
+	public function get_client(){
+		return $this->client;
 	}
 
 	public function build_client(){
@@ -80,7 +80,7 @@ class GoogleController extends Controller{
 		 
 		$app_config = app('config')->get('services');
 		if ( !empty( $this->client ) ){
-
+			session(['oauth_redirect_request' => Ana::get_current_url()]);
 			// We now have a client object, let's try to build our token;
 			if ( !is_null($this->user->google_token) ) {
 				// We have a token in the database.

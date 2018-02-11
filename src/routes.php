@@ -26,7 +26,8 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                     $req = request();
                     $session = $req->session();
                     $user = Auth::user();
-                    $client = GoogleController::get_client();
+                    $gc = new GoogleController;
+                    $client = $gc->get_client();
                     dd($req, $session, $user, $client);
             });
 
