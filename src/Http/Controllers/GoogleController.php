@@ -34,18 +34,24 @@ class GoogleController extends Controller{
 	protected $user;
 	
 	function __construct(){
-
-		$this->middleware(function ($request, $next) {
-			$this->user = auth()->user();
-			return $next($request);
-		 });
-
-		 $this->build_client();
-		 dd('Middleware break', $this);
-
+		//$this->middleware(function ($request, $next) {
+		//	$this->user = auth()->user();
+		//	return $next($request);
+		// });
+		// $this->build_client();
+		// dd('Middleware break', $this);
 	}
 
-	public function build_client(){
+	public function build_client(Request $request){
+		// We need a user object.
+
+		if (Auth::check()){
+			$this->user = Auth::user();
+		} else {
+			throw \Exception('User not logged in.');
+		}
+		 
+
 		$app_config = app('config')->get('services');
 		if ( !empty($app_config['google']) ){
 			$this->google_config = $app_config['google'];
@@ -107,6 +113,13 @@ class GoogleController extends Controller{
 	 */
 	public function handle_provider_callback(Request $request){
 		dd($request);
+
+		if (Auth::check()){
+			$this->user = Auth::user();
+		} else {
+			throw \Exception('User not logged in.');
+		}
+
 		if ( !empty($request->query('code')) ) {
 
 			$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
