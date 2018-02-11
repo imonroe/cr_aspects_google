@@ -59,6 +59,7 @@ class GoogleController extends Controller{
 			$client->setClientSecret( $this->google_config['client_secret'] );
 			$client->setDeveloperKey( $this->google_config['public_api_key'] );
 			$client->setAccessType("offline");
+			$client->setApprovalPrompt("force");  // Disable after debugging. Forces a refresh token.
 			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
 			$this->client = $client;
 		} else {

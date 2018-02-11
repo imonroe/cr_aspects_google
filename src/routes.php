@@ -31,15 +31,11 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                 if ( !empty($code) && !empty($user) && !empty($user) ){
                     $client->authenticate($code);
                     $google_client_token = $client->getAccessToken();
-
-                    //$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-                    
-                    $user_data['token'] = $google_client_token['access_token'];
-                    $user_data['refreshToken'] = $google_client_token['refresh_token'];
-                    $user_data['expiresIn'] = $google_client_token['expires_in'];
-
-                    $user->google_token = json_encode($user_data);
+                    $user->google_token = json_encode($google_client_token);
                     $user->save();
+
+                    echo( 'I think I should send you to: '.session()->get('oauth_redirect_request') );
+
                 } else {
                     throw \Exception('Couldn\'t get a token from Google.');
                 }
