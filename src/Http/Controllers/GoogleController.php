@@ -34,87 +34,70 @@ class GoogleController extends Controller{
 	protected $user;
 	
 	function __construct(){
+
 		$this->middleware(function ($request, $next) {
-			
-
 			$this->user = auth()->user();
-			$app_config = app('config')->get('services');
-			if ( !empty($app_config['google']) ){
-				$this->google_config = $app_config['google'];
-				$client = new Google_Client();
-				$client->setApplicationName( $this->google_config['application_name'] );
-				$client->setAuthConfig( $this->google_config['auth_config_file'] );
-				$client->addScope("https://www.googleapis.com/auth/drive");
-				$client->addScope("https://www.googleapis.com/auth/calendar");
-				$client->addScope("https://www.googleapis.com/auth/tasks");
-				$client->addScope("https://www.googleapis.com/auth/userinfo.email");
-				$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
-				$client->addScope("https://www.google.com/m8/feeds/");
-				$client->setClientId( $this->google_config['client_id'] );
-				$client->setClientSecret( $this->google_config['client_secret'] );
-				$client->setDeveloperKey( $this->google_config['public_api_key'] );
-				$client->setAccessType("offline");
-				$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
-				$this->client = $client;
-
-				// We now have a client object, let's try to build our token;
-				if ( !is_null($this->user->google_token) ) {
-					// We have a token in the database.
-					$google_client_token = json_decode( $this->user->google_token, true );
-				} else {
-					// There is no token in the 
-					$auth_url = $this->client->createAuthUrl();
-					Redirect::to($auth_url)->send();
-				}
-		
-				dd($google_client_token);
-
-				$client->setAccessToken(json_encode($google_client_token));
-
-				if($client->isAccessTokenExpired()){
-					$client->setAccessType("refresh_token");
-					$client->refreshToken($google_client_token['refresh_token']);
-					$new_token = $client->getAccessToken();
-					
-					$user_data['token'] = $new_token['access_token'];
-					$user_data['refreshToken'] = $new_token['refresh_token'];
-					$user_data['expiresIn'] = $new_token['expires_in'];
-					
-					$this->user->google_token = json_encode($user_data);
-					$this->user->save();
-					
-					if ( !is_null( session()->all() ) ){
-						session( [ 'user_data' => $user_data ] );
-					}
-				}
-			} else {
-				throw \Exception('No Google configuration found.');
-			}
-			
 			return $next($request);
-		 });	
+		 });
+
+		 $this->build_client();
+		 dd('Middleware break', $this);
+
 	}
 
 	public function build_client(){
-		
-		
+		$app_config = app('config')->get('services');
+		if ( !empty($app_config['google']) ){
+			$this->google_config = $app_config['google'];
+			$client = new Google_Client();
+			$client->setApplicationName( $this->google_config['application_name'] );
+			$client->setAuthConfig( $this->google_config['auth_config_file'] );
+			$client->addScope("https://www.googleapis.com/auth/drive");
+			$client->addScope("https://www.googleapis.com/auth/calendar");
+			$client->addScope("https://www.googleapis.com/auth/tasks");
+			$client->addScope("https://www.googleapis.com/auth/userinfo.email");
+			$client->addScope("https://www.googleapis.com/auth/userinfo.profile");
+			$client->addScope("https://www.google.com/m8/feeds/");
+			$client->setClientId( $this->google_config['client_id'] );
+			$client->setClientSecret( $this->google_config['client_secret'] );
+			$client->setDeveloperKey( $this->google_config['public_api_key'] );
+			$client->setAccessType("offline");
+			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
+			$this->client = $client;
 
-		/**
-		 * We would really like a client token that looks like: 
-		 * 
-		 * $google_client_token = [
-		 * 'access_token' => $user_data['token'],
-		 * 'refresh_token' => $user_data['refreshToken'],
-		 * 'expires_in' => $user_data['expiresIn'],
-		 * ];
-		 * 
-		 */
+			// We now have a client object, let's try to build our token;
+			if ( !is_null($this->user->google_token) ) {
+				// We have a token in the database.
+				$google_client_token = json_decode( $this->user->google_token, true );
+			} else {
+				// There is no token in the 
+				$auth_url = $this->client->createAuthUrl();
+				Redirect::to($auth_url)->send();
+			}
+	
+			dd($google_client_token);
 
+			$client->setAccessToken(json_encode($google_client_token));
 
-		
-			
-		
-
+			if($client->isAccessTokenExpired()){
+				$client->setAccessType("refresh_token");
+				$client->refreshToken($google_client_token['refresh_token']);
+				$new_token = $client->getAccessToken();
+				
+				$user_data['token'] = $new_token['access_token'];
+				$user_data['refreshToken'] = $new_token['refresh_token'];
+				$user_data['expiresIn'] = $new_token['expires_in'];
+				
+				$this->user->google_token = json_encode($user_data);
+				$this->user->save();
+				
+				if ( !is_null( session()->all() ) ){
+					session( [ 'user_data' => $user_data ] );
+				}
+			}
+		} else {
+			throw \Exception('No Google configuration found.');
+		}	
 	}
 
 	/**
@@ -230,6 +213,7 @@ class GoogleController extends Controller{
 	}
 	
 	public function get_all_task_lists(){
+		$this->build_client();
 		$tasksService = new Google_Service_Tasks($this->client);
  		$tasklists = $tasksService->tasklists->listTasklists();
 		return $tasklists;
