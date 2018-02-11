@@ -21,24 +21,29 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
             }
         );
         Route::middleware(['web'])->group(function(){
-
             Route::get('auth/google/callback', function(){
-                    $req = request();
-                    $code = $req->query('code');
-                    $session = $req->session();
-                    $user = Auth::user();
-                    $gc = new GoogleController;
-                    $client = $gc->get_client();
+                $req = request();
+                $code = $req->query('code');
+                $session = $req->session();
+                $user = Auth::user();
+                $gc = new GoogleController;
+                $client = $gc->get_client();
+                if ( !empty($code) && !empty($user) && !empty($user) ){
+                    $client->authenticate($code);
+                    $google_client_token = $client->getAccessToken();
 
-                    if ( !empty($code) && !empty($user) && !empty($user) ){
-                        $client->authenticate($code);
-                        $access_token = $client->getAccessToken();
-                        dd($access_token);
-                    } else {
-                        throw \Exception('Couldn\'t get a token from Google.');
-                    }
+                    //$google_client_token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+                    
+                    $user_data['token'] = $google_client_token['access_token'];
+                    $user_data['refreshToken'] = $google_client_token['refresh_token'];
+                    $user_data['expiresIn'] = $google_client_token['expires_in'];
 
-                    dd($req, $session, $user, $client);
+                    $user->google_token = json_encode($user_data);
+                    $user->save();
+                } else {
+                    throw \Exception('Couldn\'t get a token from Google.');
+                }
+                dd($req, $session, $user, $client);
             });
 
         });
