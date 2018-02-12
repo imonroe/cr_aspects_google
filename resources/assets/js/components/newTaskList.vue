@@ -34,8 +34,8 @@ export default {
     },
     methods: {
         createList(){
-          var form = document.getElementById("basic_search_form");
-          var fd = serialize(form);
+          //var form = document.getElementById("basic_search_form");
+          var fd = $("#basic_search_form").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
                 console.log(response);
