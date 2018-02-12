@@ -106,6 +106,12 @@ class GoogleController extends Controller{
 	}
 
 	// Tasks stuff.
+	public function new_task_list(Request $request){
+		echo(var_export($request));
+		die();
+	}
+
+
 	public function task_list($task_list_id='@default'){
 		/*
 		This function returns an object that looks like the following:

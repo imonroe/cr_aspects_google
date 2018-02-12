@@ -15,7 +15,8 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
 
 				Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
 				Route::get('gtasks/', 'GoogleController@display_task_list');
-				Route::post('gtasks', 'GoogleController@edit_task_list');
+                Route::post('gtasks', 'GoogleController@edit_task_list');
+                Route::post('gtasks/new_list', 'GoogleController@new_task_list');
 				Route::get('gcal', 'GoogleController@get_calendar');
 				Route::post('gcal', 'GoogleController@edit_calendar');
             }
