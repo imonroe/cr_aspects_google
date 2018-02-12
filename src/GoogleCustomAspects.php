@@ -3,6 +3,7 @@
 namespace imonroe\cr_aspects_google;
 
 use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
+use Illuminate\Support\Facades\Redirect;
 
 class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResultAspect{
 	public function notes_schema(){
@@ -228,6 +229,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 			$output .= '<li>'.$l['title'].' -- list_id: '.$l['id'].'</li>'.PHP_EOL;
 		}
 		$output .= '</ul>'.PHP_EOL;
+		$output .= '<new-google-tasklist></new-google-tasklist>';
 		$output .= parent::create_form($subject_id, $this->aspect_type);
 		return $output;
 	}
