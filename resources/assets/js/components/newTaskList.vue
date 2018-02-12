@@ -7,7 +7,7 @@
 
     <form id="new_google_task_list" class="form-inline my-2 my-lg-0">
         <input type="hidden" name="_token" :value="csrf">
-        <el-input placeholder="Please input" v-model="input">
+        <el-input placeholder="Please input" v-model="input" name="new_list_name">
             <el-button type="primary" @click="createList" slot="append">Create</el-button>
         </el-input>
         
