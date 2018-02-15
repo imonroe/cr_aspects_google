@@ -27,12 +27,14 @@ export default {
     mixins: [],
     data () {
       return {
-        csrf: "",  
+        csrf: '',
+        available_lists: '',  
         task_list_name: ''
       }
     },
     mounted() {
         this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
+        this.available_lists = this.fetchLists();
     },
     props: [
      
@@ -45,6 +47,17 @@ export default {
           var fd = $("#new_google_task_list").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
+                this.available_lists = response;
+                console.log(response);
+            })
+            .catch(function(error){
+                console.log(error);
+            });
+        }, 
+        fetchLists(){
+            axios.get('gtasks/available_lists')
+            .then(function(response){
+                this.available_lists = response;
                 console.log(response);
             })
             .catch(function(error){

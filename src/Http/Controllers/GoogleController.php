@@ -107,17 +107,15 @@ class GoogleController extends Controller{
 
 	// Tasks stuff.
 	public function new_task_list(Request $request){
+		$this->build_client();
 		$input = $request->all();
-		//echo(var_export($input));
-
 		$tasks_service = new Google_Service_Tasks($this->client);
 		$tasklists = $tasks_service->tasklists;
-		echo $tasklists->insert($optParams = ['title' => $input['task_list_name']]);
-
-
+		$new_list = new Google_Service_Tasks_TaskList;
+		$new_list->setTitle( $input['task_list_name'] );
+		return $tasklists->insert($new_list);
 		die();
 	}
-
 
 	public function task_list($task_list_id='@default'){
 		/*
@@ -181,36 +179,46 @@ class GoogleController extends Controller{
 		}
 		return $output;
 	}
-
-	public function edit_task_list(Request $request){
-		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
-		switch($request->input('action')){
-			case "new_todo_item":
-				$list_id = !empty($request->input('task_list')) ? $request->input('task_list') : '@default';
-				$todo_service = new Google_Service_Tasks($this->client);
-				$task = new Google_Service_Tasks_Task();
-				$task->setTitle($request->input('new_task_title'));
-				$task->setDue($today_timestamp);
-				$result = $todo_service->tasks->insert($list_id, $task);
-				echo('Got back: '.$result->getId());
-				break;
-
-			case "complete_todo_item":
-				$list_id = !empty($request->input('list_id')) ? $request->input('list_id') : '@default';
-				$todo_service = new Google_Service_Tasks($this->client);
-				$task = $todo_service->tasks->get($list_id, $request->input('task_id') );
-				$task->setStatus('completed');
-				$result = $todo_service->tasks->update($list_id, $task->getId(), $task);
-				break;
-		}
-	}
 	
 	public function get_all_task_lists(){
 		$this->build_client();
 		$tasksService = new Google_Service_Tasks($this->client);
- 		$tasklists = $tasksService->tasklists->listTasklists();
-		return $tasklists;
+ 		return $tasksService->tasklists->listTasklists();
 	}
+
+	public function new_task(Request $request){
+		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
+		$list_id = !empty($request->input('task_list')) ? $request->input('task_list') : '@default';
+		$todo_service = new Google_Service_Tasks($this->client);
+		$task = new Google_Service_Tasks_Task();
+		$task->setTitle($request->input('new_task_title'));
+		$task->setDue($today_timestamp);
+		$result = $todo_service->tasks->insert($list_id, $task);
+		echo('Got back: '.$result->getId());
+	}
+
+	public function edit_task(Request $request){
+		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
+
+	}
+
+	public function complete_task(Request $request){
+		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
+		$list_id = !empty($request->input('list_id')) ? $request->input('list_id') : '@default';
+		$todo_service = new Google_Service_Tasks($this->client);
+		$task = $todo_service->tasks->get($list_id, $request->input('task_id') );
+		$task->setStatus('completed');
+		$result = $todo_service->tasks->update($list_id, $task->getId(), $task);
+	}
+
+	public function remove_task(Request $request){
+		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
+
+	}
+
+
+
+
 
 	// Calendar stuff.
 	public function get_calendar($calendar_id='primary'){
