@@ -12,7 +12,7 @@
 
         <div class="form-group">
             <label for="task_list_name">Create a new Task List</label>
-            <input type="text" class="form-control" id="task_list_name" placeholder="New list title" v-model="task_list_name">
+            <input type="text" class="form-control" id="task_list_name" name="task_list_name" placeholder="New list title" v-model="task_list_name">
         </div>
 
         <button type="submit" class="btn btn-default">Create</button>
@@ -27,10 +27,13 @@ export default {
     mixins: [],
     data () {
       return {
+        csrf: "",  
         task_list_name: ''
       }
     },
-    mounted() {},
+    mounted() {
+        this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
+    },
     props: [
      
     ],
