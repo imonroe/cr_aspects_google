@@ -6,7 +6,7 @@
     <div id="new_list_form">
         <p>Available lists:
             <ul>
-                {{ available_lists }}
+                <li v-for="list in available_lists.items"> {{ list.title }} </li>
             </ul>
         </p>
         <form id="new_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="createList">
