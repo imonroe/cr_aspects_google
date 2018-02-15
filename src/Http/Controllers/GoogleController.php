@@ -15,6 +15,7 @@ use Google_Client;
 use Google_Service_Tasks;
 use Google_Service_Tasks_Task;
 use Google_Service_Tasks_TaskLists;
+use Google_Service_Tasks_TaskList;
 use Google_Service_Tasks_Tasklists_Resource;
 use Google_Service_Calendar;
 use Google_Http_Request;
@@ -113,8 +114,8 @@ class GoogleController extends Controller{
 		$tasklists = $tasks_service->tasklists;
 		$new_list = new Google_Service_Tasks_TaskList;
 		$new_list->setTitle( $input['task_list_name'] );
-		return $tasklists->insert($new_list);
-		die();
+		return json_encode( $tasklists->insert($new_list) );
+		//die();
 	}
 
 	public function task_list($task_list_id='@default'){
@@ -149,7 +150,7 @@ class GoogleController extends Controller{
 				#processed: []
 			}
 		*/
-
+		$this->build_client();	
 		$tomorrow = strtotime('+1 day');
 		$tomorrow_timestamp = date(DATE_RFC3339, $tomorrow);
 		//$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
@@ -167,6 +168,7 @@ class GoogleController extends Controller{
 	}
 
 	public function display_task_list($task_list_id='@default'){
+		$this->build_client();
 		if ($task_list_id == '@default'){
 			$function_id = '';
 		} else {
@@ -183,10 +185,11 @@ class GoogleController extends Controller{
 	public function get_all_task_lists(){
 		$this->build_client();
 		$tasksService = new Google_Service_Tasks($this->client);
- 		return $tasksService->tasklists->listTasklists();
+ 		return json_encode($tasksService->tasklists->listTasklists());
 	}
 
 	public function new_task(Request $request){
+		$this->build_client();
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
 		$list_id = !empty($request->input('task_list')) ? $request->input('task_list') : '@default';
 		$todo_service = new Google_Service_Tasks($this->client);
@@ -198,6 +201,7 @@ class GoogleController extends Controller{
 	}
 
 	public function edit_task(Request $request){
+		$this->build_client();
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
 
 	}
