@@ -51,6 +51,9 @@ export default {
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
                 //self.available_lists = response.data;
+                if (response.data.kind == "tasks#taskList"){
+                    console.log('Created list successfully.');
+                }
                 self.fetchLists();
                 console.log(response.data);
             })
