@@ -29,7 +29,12 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
 
             // Routes for Google Tasks
             Route::post('gtasks/new_list', 'GoogleController@new_task_list');
-            Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
+            Route::get('gtasks/available_lists', 'GoogleController@get_all_task_lists');
+            Route::get('gtasks/list/{task_list_id}', 'GoogleController@display_task_list');
+            Route::post('gtasks/task/add', 'GoogleController@new_task');
+            Route::post('gtasks/task/edit', 'GoogleController@edit_task');
+            Route::post('gtasks/task/complete', 'GoogleController@complete_task');
+            Route::post('gtasks/task/remove', 'GoogleController@remove_task');
 			Route::get('gtasks/', 'GoogleController@display_task_list');
             Route::post('gtasks', 'GoogleController@edit_task_list');
 
