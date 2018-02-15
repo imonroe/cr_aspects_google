@@ -39,7 +39,6 @@ export default {
     },
     methods: {
         createList(){
-          //var form = document.getElementById("basic_search_form");
           var fd = $("#new_google_task_list").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
