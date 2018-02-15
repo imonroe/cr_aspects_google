@@ -11,13 +11,14 @@
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
             <input type="hidden" name="_token" :value="csrf">
-            <select class="form-control">
+            <select class="form-control" id="selected_list" name="selected_list">
                 <option disabled value=""> -- Select a list -- </option>
                 <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
             </select>
-            <button type="submit" class="btn btn-default">Create</button>
+            <button type="submit" class="btn btn-default">Use this list</button>
         </form>
 
+        <p> - or - </p>
 
         <form id="new_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="createList">
             <input type="hidden" name="_token" :value="csrf">
@@ -83,7 +84,7 @@ export default {
         },
         selectList(){
             var self = this;
-            var fd = $("#new_google_task_list").serialize();
+            var fd = $("#select_google_task_list").serialize();
             console.log(fd);
         }
     }
