@@ -108,42 +108,48 @@ class GoogleController extends Controller{
 	// Tasks stuff.
 	public function new_task_list(Request $request){
 		$input = $request->all();
-		echo(var_export($input));
+		//echo(var_export($input));
+
+		$tasks_service = new Google_Service_Tasks($this->client);
+		$tasklists = $tasks_service->tasklists;
+		echo $tasklists->insert($optParams = ['title' => $input['task_list_name']]);
+
+
 		die();
 	}
 
 
 	public function task_list($task_list_id='@default'){
 		/*
-		This function returns an object that looks like the following:
-		Useful: $object->items[0]['title']	
+			This function returns an object that looks like the following:
+			Useful: $object->items[0]['title']	
 
-		Google_Service_Tasks_Tasks {#274 ▼
-			#collection_key: "items"
-			+etag: ""ZPF2pw17LedTHeJNTnTTe4cmlp4/MTE2MTMxNDIyNw""
-			#itemsType: "Google_Service_Tasks_Task"
-			#itemsDataType: "array"
-			+kind: "tasks#tasks"
-			+nextPageToken: null
-			#internal_gapi_mappings: []
-			#modelData: array:1 [▼
-			"items" => array:7 [▼
-				0 => array:9 [▼
-				  "kind" => "tasks#task"
-				  "id" => "MDE0MTE1MjY1MjcwNzYwNDY5Nzg6MDo1NDIwNzM0NTc"
-				  "etag" => ""ZPF2pw17LedTHeJNTnTTe4cmlp4/MTAyNjY0NjcwOA""
-				  "title" => "Laundry"
-				  "updated" => "2017-05-26T14:44:22.000Z"
-				  "selfLink" => "https://www.googleapis.com/tasks/v1/lists/..."
-				  "position" => "00000000000002796203"
-				  "status" => "needsAction"
-				  "due" => "2017-05-27T00:00:00.000Z"
-				 ]
-				1 => array:9 [▶]
-			   ]
-			]
-			#processed: []
-		}
+			Google_Service_Tasks_Tasks {#274 ▼
+				#collection_key: "items"
+				+etag: ""ZPF2pw17LedTHeJNTnTTe4cmlp4/MTE2MTMxNDIyNw""
+				#itemsType: "Google_Service_Tasks_Task"
+				#itemsDataType: "array"
+				+kind: "tasks#tasks"
+				+nextPageToken: null
+				#internal_gapi_mappings: []
+				#modelData: array:1 [▼
+				"items" => array:7 [▼
+					0 => array:9 [▼
+					"kind" => "tasks#task"
+					"id" => "MDE0MTE1MjY1MjcwNzYwNDY5Nzg6MDo1NDIwNzM0NTc"
+					"etag" => ""ZPF2pw17LedTHeJNTnTTe4cmlp4/MTAyNjY0NjcwOA""
+					"title" => "Laundry"
+					"updated" => "2017-05-26T14:44:22.000Z"
+					"selfLink" => "https://www.googleapis.com/tasks/v1/lists/..."
+					"position" => "00000000000002796203"
+					"status" => "needsAction"
+					"due" => "2017-05-27T00:00:00.000Z"
+					]
+					1 => array:9 [▶]
+				]
+				]
+				#processed: []
+			}
 		*/
 
 		$tomorrow = strtotime('+1 day');
