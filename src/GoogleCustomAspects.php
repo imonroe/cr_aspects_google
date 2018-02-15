@@ -226,9 +226,10 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		$output .= '<p>Available Google Task Lists: </p>'.PHP_EOL;
 		$output .= '<ul>'.PHP_EOL;
 		foreach ($lists_array as $l){
-			$output .= '<li>'.$l['title'].' -- list_id: '.$l['id'].'</li>'.PHP_EOL;
+			$output .= '<li>'.$l['title'].'</li>'.PHP_EOL;
 		}
 		$output .= '</ul>'.PHP_EOL;
+
 		$output .= '<new-google-tasklist></new-google-tasklist>';
 		$output .= parent::create_form($subject_id, $this->aspect_type);
 		return $output;

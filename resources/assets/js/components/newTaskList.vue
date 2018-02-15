@@ -7,9 +7,13 @@
 
     <form id="new_google_task_list" class="form-inline my-2 my-lg-0">
         <input type="hidden" name="_token" :value="csrf">
-        <el-input placeholder="Please input" v-model="input" name="new_list_name">
-            <el-button type="primary" @click="createList" slot="append">Create</el-button>
-        </el-input>
+        <input type="hidden" name="action" value="add_task_list">
+
+        <div class="form-group">
+            <label for="task_list_name">Create a new Task List</label>
+            <input type="text" class="form-control" id="task_list_name" placeholder="New list title" v-model="task_list_name">
+        </div>
+        <button type="submit" class="btn btn-default">Create</button>
         
     </form>
 
@@ -22,7 +26,7 @@ export default {
     mixins: [],
     data () {
       return {
-        value: ''
+        task_list_name: ''
       }
     },
     mounted() {},
@@ -35,7 +39,7 @@ export default {
     methods: {
         createList(){
           //var form = document.getElementById("basic_search_form");
-          var fd = $("#basic_search_form").serialize();
+          var fd = $("#new_google_task_list").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
                 console.log(response);

@@ -7,22 +7,8 @@ use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 
 Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
     function () {
-        Route::middleware(['auth', 'web'])->group(
-            function () {
-                // Google API routes
-                // OAuth2 Callback route first.
-                Route::get('auth/google/callback', 'GoogleController@handle_provider_callback');
-
-				Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
-				Route::get('gtasks/', 'GoogleController@display_task_list');
-                Route::post('gtasks', 'GoogleController@edit_task_list');
-                
-				Route::get('gcal', 'GoogleController@get_calendar');
-				Route::post('gcal', 'GoogleController@edit_calendar');
-            }
-        );
         Route::middleware(['web'])->group(function(){
-            Route::post('gtasks/new_list', 'GoogleController@new_task_list');
+            // This is the route that handles OAuth2 callbacks from Google.
             Route::get('auth/google/callback', function(){
                 $req = request();
                 $code = $req->query('code');
@@ -40,6 +26,19 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                 }
                 Redirect::to('home/')->send();
             });
+
+            // Routes for Google Tasks
+            Route::post('gtasks/new_list', 'GoogleController@new_task_list');
+            Route::get('gtasks/{task_list_id}', 'GoogleController@display_task_list');
+			Route::get('gtasks/', 'GoogleController@display_task_list');
+            Route::post('gtasks', 'GoogleController@edit_task_list');
+
+            // Routes for Google Calendar
+            Route::get('gcal', 'GoogleController@get_calendar');
+            Route::post('gcal', 'GoogleController@edit_calendar');
+            
+            // Routes for Google Contacts
+
 
         });
     }

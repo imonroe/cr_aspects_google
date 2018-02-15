@@ -107,7 +107,8 @@ class GoogleController extends Controller{
 
 	// Tasks stuff.
 	public function new_task_list(Request $request){
-		echo(var_export($request));
+		$input = $request->all();
+		echo(var_export($input));
 		die();
 	}
 
