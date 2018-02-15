@@ -2,7 +2,6 @@
 
 
 <template>
-
     <div id="new_list_form">
         <p>Available lists:
             <ul>
@@ -20,7 +19,6 @@
             </div>
 
             <button type="submit" class="btn btn-default">Create</button>
-            
         </form>
     </div>
 </template>
@@ -52,7 +50,8 @@ export default {
           var fd = $("#new_google_task_list").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
-                self.available_lists = response.data;
+                //self.available_lists = response.data;
+                self.fetchLists();
                 console.log(response.data);
             })
             .catch(function(error){
