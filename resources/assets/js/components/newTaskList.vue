@@ -55,7 +55,7 @@ export default {
             });
         }, 
         fetchLists(){
-            axios.get('gtasks/available_lists')
+            axios.get('/gtasks/available_lists')
             .then(function(response){
                 this.available_lists = response;
                 console.log(response);
