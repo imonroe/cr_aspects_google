@@ -44,10 +44,11 @@ export default {
     },
     methods: {
         createList(){
+          var self = this;
           var fd = $("#new_google_task_list").serialize();
           axios.post('/gtasks/new_list', fd)
             .then(function(response){
-                this.available_lists = response;
+                self.available_lists = response;
                 console.log(response);
             })
             .catch(function(error){
@@ -55,9 +56,10 @@ export default {
             });
         }, 
         fetchLists(){
+            var self = this;
             axios.get('/gtasks/available_lists')
             .then(function(response){
-                this.available_lists = response;
+                self.available_lists = response;
                 console.log(response);
             })
             .catch(function(error){
