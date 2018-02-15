@@ -8,8 +8,18 @@
                 <li v-for="list in available_lists.items"> {{ list.title }} </li>
             </ul>
         </p>
+
+        <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
+            <input type="hidden" name="_token" :value="csrf">
+            <select class="form-control">
+                <option disabled value=""> -- Select a list -- </option>
+                <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
+            </select>
+            <button type="submit" class="btn btn-default">Create</button>
+        </form>
+
+
         <form id="new_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="createList">
-            
             <input type="hidden" name="_token" :value="csrf">
             <input type="hidden" name="action" value="add_task_list">
 
@@ -17,7 +27,6 @@
                 <label for="task_list_name">Create a new Task List</label>
                 <input type="text" class="form-control" id="task_list_name" name="task_list_name" placeholder="New list title" v-model="task_list_name">
             </div>
-
             <button type="submit" class="btn btn-default">Create</button>
         </form>
     </div>
@@ -71,6 +80,11 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
+        },
+        selectList(){
+            var self = this;
+            var fd = $("#new_google_task_list").serialize();
+            console.log(fd);
         }
     }
 };
