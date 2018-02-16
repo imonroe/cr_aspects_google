@@ -218,13 +218,20 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 	public function create_form($subject_id, $aspect_type_id=null){
 		$lists_agent =  new GoogleController;
 		$output = '';
-		$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type-id="'.$aspect_type_id.'" ></new-google-tasklist>';
+		$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type="'.$aspect_type_id.'" ></new-google-tasklist>';
 		return $output;
 	}
 	public function edit_form($id){
 		$lists_agent =  new GoogleController;
+		$settings = $this->get_aspect_notes_array();
 		$output = '';
-		$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type-id="'.$this->aspect_type.'" ></new-google-tasklist>';
+		$output .= '<new-google-tasklist 
+						v-bind:subject-id="'.$this->subject_id().'" 
+						v-bind:aspect-type="'.$this->aspect_type.'" 
+						v-bind:aspect-id="'.$this->id.'" 
+						v-bind:settings-list-id="'.$settings['list_id'].'" 
+						v-bind:title="'.$this->title.'" >
+					</new-google-tasklist>';
 		return $output;
 	}
 

@@ -3,15 +3,44 @@
 
 <template>
     <div id="new_list_form">
+        
         <p>Available lists:
             <ul>
                 <li v-for="list in available_lists.items"> {{ list.title }} </li>
             </ul>
         </p>
 
-        <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
+        <form v-if="this.doUpdate() == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
+        <!-- the create version. -->
             <input type="hidden" name="_token" :value="csrf"></input>
-            <input type="hidden" name="aspect_type" :value="aspectTypeId"></input>
+            <input type="hidden" name="aspect_type" :value="aspectType"></input>
+            <input type="hidden" name="subject_id" :value="subjectId"></input>
+            <input type="hidden" name="aspect_data" value=""></input>
+            <input type="hidden" name="hidden" value="0"></input>
+            <input type="hidden" name="aspect_source" value=""></input>
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title"></input>        
+            </div>
+
+            <div class="form-group">
+                <label for="settings_list_id">Use this task list</label>
+                <select class="form-control" id="settings_list_id" name="settings_list_id">
+                    <option disabled value=""> -- Select a list -- </option>
+                    <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-default">Select</button>
+        </form>
+
+
+        <form v-else id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="editList" >
+        <!-- the edit version. -->
+            <input v-if="this.doUpdate() == true" type="hidden" name="aspect_id" :value="aspectId"></input>
+            <input type="hidden" name="_token" :value="csrf"></input>
+            <input type="hidden" name="aspect_type" :value="aspectType"></input>
             <input type="hidden" name="subject_id" :value="subjectId"></input>
             <input type="hidden" name="aspect_data" value=""></input>
             <input type="hidden" name="hidden" value="0"></input>
@@ -66,14 +95,25 @@ export default {
         this.available_lists = this.fetchLists();
     },
     props: [
+        'aspectId',
         'aspectType',
-        'aspectTypeId',
         'title',
         'aspectNotes',
+        'aspectData',
         'aspectSource',
-        'subjectId'
+        'hidden',
+        'subjectId',
+        'settingsListId'
     ],
-    computed: {},
+    computed: {
+        doUpdate: function () {
+            if (typeof this.aspectID === 'undefined' || this.aspectID === null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    },
     methods: {
         createList(){
           var self = this;
@@ -122,6 +162,13 @@ export default {
             console.log(fd);
             axios.post('/aspect/create', fd);
             
+        },
+        editList(){
+            var self = this;
+            var fd = $("#select_google_task_list").serialize();
+            //fd['aspect_type_id'] = this.aspectTypeId;
+            console.log(fd);
+            axios.post('/aspect/' + self.aspectID + '/edit', fd);
         }
     }
 };
