@@ -225,13 +225,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		$lists_agent =  new GoogleController;
 		$settings = $this->get_aspect_notes_array();
 		$output = '';
-		$output .= '<new-google-tasklist 
-						v-bind:subject-id="'.$this->subject_id().'" 
-						v-bind:aspect-type="'.$this->aspect_type.'" 
-						v-bind:aspect-id="'.$this->id.'" 
-						:settings-list-id="'.$settings['list_id'].'" 
-						:title="'.$this->title.'" >
-					</new-google-tasklist>';
+		$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type="'.$this->aspect_type.'" v-bind:aspect-id="'.$this->id.'" :settings-list-id="'.$settings['list_id'].'" :title="'.$this->title.'" ></new-google-tasklist>';
 		return $output;
 	}
 
