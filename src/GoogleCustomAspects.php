@@ -229,8 +229,8 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 						v-bind:subject-id="'.$this->subject_id().'" 
 						v-bind:aspect-type="'.$this->aspect_type.'" 
 						v-bind:aspect-id="'.$this->id.'" 
-						v-bind:settings-list-id="'.$settings['list_id'].'" 
-						v-bind:title="'.$this->title.'" >
+						:settings-list-id="'.$settings['list_id'].'" 
+						:title="'.$this->title.'" >
 					</new-google-tasklist>';
 		return $output;
 	}
