@@ -11,17 +11,20 @@
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
             <input type="hidden" name="_token" :value="csrf"></input>
-            <input type="hidden" name="aspect_type_id" :value="aspectTypeId"></input>
+            <input type="hidden" name="aspect_type" :value="aspectTypeId"></input>
             <input type="hidden" name="subject_id" :value="subjectId"></input>
+            <input type="hidden" name="aspect_data" value=""></input>
+            <input type="hidden" name="hidden" value="0"></input>
+            <input type="hidden" name="aspect_source" value=""></input>
 
             <div class="form-group">
-                <label for="list_title">Title</label>
-                <input type="text" id="list_title" name="list_title"></input>        
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title"></input>        
             </div>
 
             <div class="form-group">
-                <label for="list_id">Use this task list</label>
-                <select class="form-control" id="list_id" name="list_id">
+                <label for="settings_list_id">Use this task list</label>
+                <select class="form-control" id="settings_list_id" name="settings_list_id">
                     <option disabled value=""> -- Select a list -- </option>
                     <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
                 </select>
@@ -70,9 +73,7 @@ export default {
         'aspectSource',
         'subjectId'
     ],
-    computed: {
-    
-    },
+    computed: {},
     methods: {
         createList(){
           var self = this;
@@ -102,8 +103,21 @@ export default {
             });
         },
         selectList(){
+            /**
+             * fd = [
+             *  '_token',
+             *  'subject_id',
+             *  'aspect_type',
+             *  'title',
+             *  'aspect_data',
+             *  'hidden' => 0,
+             *  'aspect_source',
+             *  'settings_list_id',
+             * ]
+             * 
+             */
             var self = this;
-            var fd = $("#select_google_task_list").serialize();
+            var fd = $("#select_google_task_list");
             //fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
             axios.post('/aspect/create', fd);
