@@ -117,7 +117,7 @@ export default {
              * 
              */
             var self = this;
-            var fd = $("#select_google_task_list");
+            var fd = $("#select_google_task_list").serialize();
             //fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
             axios.post('/aspect/create', fd);
