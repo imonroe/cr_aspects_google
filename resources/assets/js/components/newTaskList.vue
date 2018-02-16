@@ -87,7 +87,8 @@ export default {
         available_lists: '',  
         task_list_name: '', 
         selected_list: '',
-        list_options: ''
+        list_options: '', 
+        title: ''
       }
     },
     mounted() {
@@ -100,7 +101,6 @@ export default {
     props: [
         'aspectId',
         'aspectType',
-        'title',
         'aspectNotes',
         'aspectData',
         'aspectSource',
