@@ -94,10 +94,10 @@ export default {
     mounted() {
         this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         this.available_lists = this.fetchLists();
-        if ( this.doUpdate ){
-            this.current_title = this.title;
-            this.selected_list = this.settingsListId;
-        }
+        //if ( this.doUpdate ){
+        this.current_title = (this.title) ? this.title : '';
+        this.selected_list = this.settingsListId;
+        //}
     },
     props: [
         'aspectId',
@@ -112,7 +112,7 @@ export default {
     ],
     computed: {
         doUpdate: function () {
-            if (typeof this.aspectID === 'undefined' || this.aspectID === null) {
+            if (typeof this.aspectId === 'undefined' || this.aspectId === null) {
                 return false;
             } else {
                 return true;
@@ -173,7 +173,7 @@ export default {
             var fd = $("#select_google_task_list").serialize();
             //fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
-            axios.post('/aspect/' + self.aspectID + '/edit', fd);
+            axios.post('/aspect/' + self.aspectId + '/edit', fd);
         }
     }
 };
