@@ -169,17 +169,28 @@ class GoogleController extends Controller{
 
 	public function display_task_list($task_list_id='@default'){
 		$this->build_client();
+		$tasks_service = new Google_Service_Tasks($this->client);
+		$list_params = array(
+			'dueMax' => $tomorrow_timestamp,
+			'showCompleted' => false					
+		);
+		$task_list = $tasks_service->listTasks($task_list_id, $list_params);
+		return json_encode($task_list);
+
+		/*
 		if ($task_list_id == '@default'){
 			$function_id = '';
 		} else {
 			$function_id = $task_list_id;
 		}
 		$output = '';
-		$todo_list = $this->task_list($task_list_id);	
-		foreach($todo_list->items as $t){
-			$output.='<input name="'.$t['id'].'" id="'.$t['id'].'" type="checkbox" onchange="closeTodoItem_'.$function_id.'(this)" /> '.$t['title'].'<br />'.PHP_EOL;
-		}
-		return $output;
+		$todo_list = $this->task_list($task_list_id);
+		return json_encode()
+		*/
+		//foreach($todo_list->items as $t){
+		//	$output.='<input name="'.$t['id'].'" id="'.$t['id'].'" type="checkbox" onchange="closeTodoItem_'.$function_id.'(this)" /> '.$t['title'].'<br />'.PHP_EOL;
+		//}
+		//return $output;
 	}
 	
 	public function get_all_task_lists(){
