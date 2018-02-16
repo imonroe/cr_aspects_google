@@ -11,6 +11,8 @@
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
             <input type="hidden" name="_token" :value="csrf">
+            <input type="hidden" name="aspect_type_id" :value="aspectTypeId">
+            <input type="hidden" name="subject_id" :value="subjectId">
             <!--
 
 
@@ -105,7 +107,7 @@ export default {
         selectList(){
             var self = this;
             var fd = $("#select_google_task_list").serialize();
-            fd['aspect_type_id'] = this.aspectTypeId;
+            //fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
             axios.post('/aspect/create', fd);
             
