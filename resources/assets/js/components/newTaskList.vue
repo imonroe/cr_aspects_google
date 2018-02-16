@@ -10,7 +10,7 @@
             </ul>
         </p>
 
-        <form v-if="this.doUpdate() == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
+        <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
         <!-- the create version. -->
             <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
@@ -38,7 +38,7 @@
 
         <form v-else id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="editList" >
         <!-- the edit version. -->
-            <input v-if="this.doUpdate() == true" type="hidden" name="aspect_id" :value="aspectId"></input>
+            <input v-if="this.doUpdate == true" type="hidden" name="aspect_id" :value="aspectId"></input>
             <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
             <input type="hidden" name="subject_id" :value="subjectId"></input>
