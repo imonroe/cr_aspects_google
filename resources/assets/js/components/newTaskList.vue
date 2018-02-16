@@ -10,7 +10,7 @@
             </ul>
         </p>
 
-        <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0"  >
+        <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" :action="actionPath" >
         <!-- the create version. -->
             <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
@@ -154,34 +154,6 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-        },
-        selectList(){
-            /**
-             * fd = [
-             *  '_token',
-             *  'subject_id',
-             *  'aspect_type',
-             *  'title',
-             *  'aspect_data',
-             *  'hidden' => 0,
-             *  'aspect_source',
-             *  'settings_list_id',
-             * ]
-             * 
-             */
-            var self = this;
-            var fd = $("#select_google_task_list").serialize();
-            //fd['aspect_type_id'] = this.aspectTypeId;
-            console.log(fd);
-            axios.post('/aspect/create', fd);
-            
-        },
-        editList(){
-            var self = this;
-            var fd = $("#select_google_task_list").serialize();
-            //fd['aspect_type_id'] = this.aspectTypeId;
-            console.log(fd);
-            axios.post('/aspect/' + self.aspectId + '/edit', fd);
         }
     }
 };
