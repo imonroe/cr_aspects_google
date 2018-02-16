@@ -7,11 +7,21 @@
 <template>
 
     <div>
-          <p>Holding pattern.</p> 
+        <p>Holding pattern.</p> 
 
-          <pre>
-              {{ taskList }}
-              </pre> 
+        <ul>
+            <li v-for="todo in taskList.items"> {{ todo.title }} </li>
+        </ul>
+
+        <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
+            <input type="hidden" name="_token" :value="csrf">
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="task_list_name" name="task_list_name" placeholder="Add a new task" v-model="new_task_name">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
     </div>
 
 </template>
@@ -25,7 +35,8 @@ export default {
     data () {
       return {
         csrf: '',
-        taskList: ''
+        taskList: '',
+        new_task_name: '',
       }
     },
     mounted() {
@@ -56,6 +67,10 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
+        }, 
+        addNewTask(){
+            var self = this;
+            console.log('Trying to add new task: ' + self.new_task_name);
         }
     }
 };
