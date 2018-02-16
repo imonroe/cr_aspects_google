@@ -230,7 +230,8 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 	}
 
 	public function display_aspect(){
-		return 'temporary.';
+		$settings = $this->get_aspect_notes_array();
+		return '<google-tasklist settings-list-id="'.$settings['list_id'].'" ></google-tasklist>';
 	}
 
 	public function display_aspect_old(){

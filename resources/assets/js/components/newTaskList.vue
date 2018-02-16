@@ -138,7 +138,7 @@ export default {
                     console.log('Created list successfully.');
                 }
                 self.fetchLists();
-                $("#task_list_name").val('');
+                self.task_list_name = null;
                 console.log(response.data);
             })
             .catch(function(error){
