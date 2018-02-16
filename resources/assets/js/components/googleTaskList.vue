@@ -7,7 +7,11 @@
 <template>
 
     <div>
-          <p>Holding pattern.<p/>  
+          <p>Holding pattern.</p> 
+
+          <pre>
+              {{ taskList }}
+              </pre> 
     </div>
 
 </template>
@@ -42,6 +46,7 @@ export default {
     computed: {},
     methods: {
         fetchList(){
+            console.log('trying to fetch list.');
             var self = this;
             axios.get('/gtasks/list/'+self.settingsListId)
             .then(function(response){
