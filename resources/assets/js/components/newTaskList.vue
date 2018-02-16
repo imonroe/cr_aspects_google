@@ -48,12 +48,12 @@
 
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title">{{ title }}</input>        
+                <input type="text" id="title" name="title" v-model="current_title" placeholder="Enter a title"></input>        
             </div>
 
             <div class="form-group">
                 <label for="settings_list_id">Use this task list</label>
-                <select class="form-control" id="settings_list_id" name="settings_list_id">
+                <select class="form-control" id="settings_list_id" name="settings_list_id" v-model="selected_list">
                     <option disabled value=""> -- Select a list -- </option>
                     <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
                 </select>
@@ -87,14 +87,16 @@ export default {
         available_lists: '',  
         task_list_name: '', 
         selected_list: '',
-        list_options: ''
+        list_options: '',
+        current_title: ''
       }
     },
     mounted() {
         this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         this.available_lists = this.fetchLists();
         if ( this.doUpdate ){
-            $('#settings_list_id').val( this.settingsListId );
+            this.current_title = this.title;
+            this.selected_list = this.settingsListId;
         }
     },
     props: [
