@@ -87,8 +87,7 @@ export default {
         available_lists: '',  
         task_list_name: '', 
         selected_list: '',
-        list_options: '', 
-        title: ''
+        list_options: ''
       }
     },
     mounted() {
@@ -106,7 +105,8 @@ export default {
         'aspectSource',
         'hidden',
         'subjectId',
-        'settingsListId'
+        'settingsListId',
+        'title'
     ],
     computed: {
         doUpdate: function () {
