@@ -11,11 +11,15 @@
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
             <input type="hidden" name="_token" :value="csrf">
-            <select class="form-control" id="selected_list" name="selected_list">
-                <option disabled value=""> -- Select a list -- </option>
-                <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
-            </select>
-            <button type="submit" class="btn btn-default">Use this list</button>
+            <div class="form-group">
+                <label for="selected_list">Use this task list</label>
+                <select class="form-control" id="selected_list" name="selected_list">
+                    <option disabled value=""> -- Select a list -- </option>
+                    <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-default">Select</button>
         </form>
 
         <p> - or - </p>
@@ -41,7 +45,9 @@ export default {
       return {
         csrf: '',
         available_lists: '',  
-        task_list_name: ''
+        task_list_name: '', 
+        selected_list: '',
+        list_options: ''
       }
     },
     mounted() {
