@@ -176,7 +176,7 @@ class GoogleController extends Controller{
 			'dueMax' => $tomorrow_timestamp,
 			'showCompleted' => false					
 		);
-		$task_list = $tasks_service->listTasks($task_list_id, $list_params);
+		$task_list = $tasks_service->tasks->listTasks($task_list_id, $list_params);
 		return json_encode($task_list);
 
 		/*
