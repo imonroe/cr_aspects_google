@@ -230,7 +230,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		//}
 		//$output .= '</ul>'.PHP_EOL;
 
-		$output .= '<new-google-tasklist></new-google-tasklist>';
+		$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type-id="'.$aspect_type_id.'" ></new-google-tasklist>';
 		//$output .= parent::create_form($subject_id, $this->aspect_type);
 		return $output;
 	}

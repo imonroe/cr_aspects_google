@@ -11,6 +11,15 @@
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
             <input type="hidden" name="_token" :value="csrf">
+            <!--
+
+
+            -->
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title"></input>        
+            </div>
+
             <div class="form-group">
                 <label for="selected_list">Use this task list</label>
                 <select class="form-control" id="selected_list" name="selected_list">
@@ -55,7 +64,12 @@ export default {
         this.available_lists = this.fetchLists();
     },
     props: [
-     
+        'aspectType',
+        'aspectTypeId',
+        'title',
+        'aspectNotes',
+        'aspectSource',
+        'subjectId'
     ],
     computed: {
     
@@ -91,7 +105,10 @@ export default {
         selectList(){
             var self = this;
             var fd = $("#select_google_task_list").serialize();
+            fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
+            axios.post('/aspect/create', fd);
+            
         }
     }
 };
