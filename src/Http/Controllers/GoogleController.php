@@ -169,6 +169,8 @@ class GoogleController extends Controller{
 
 	public function display_task_list($task_list_id='@default'){
 		$this->build_client();
+		$tomorrow = strtotime('+1 day');
+		$tomorrow_timestamp = date(DATE_RFC3339, $tomorrow);
 		$tasks_service = new Google_Service_Tasks($this->client);
 		$list_params = array(
 			'dueMax' => $tomorrow_timestamp,
