@@ -10,21 +10,18 @@
         </p>
 
         <form id="select_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="selectList" >
-            <input type="hidden" name="_token" :value="csrf">
-            <input type="hidden" name="aspect_type_id" :value="aspectTypeId">
-            <input type="hidden" name="subject_id" :value="subjectId">
-            <!--
+            <input type="hidden" name="_token" :value="csrf"></input>
+            <input type="hidden" name="aspect_type_id" :value="aspectTypeId"></input>
+            <input type="hidden" name="subject_id" :value="subjectId"></input>
 
-
-            -->
             <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title"></input>        
+                <label for="list_title">Title</label>
+                <input type="text" id="list_title" name="list_title"></input>        
             </div>
 
             <div class="form-group">
-                <label for="selected_list">Use this task list</label>
-                <select class="form-control" id="selected_list" name="selected_list">
+                <label for="list_id">Use this task list</label>
+                <select class="form-control" id="list_id" name="selected_list">
                     <option disabled value=""> -- Select a list -- </option>
                     <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
                 </select>
@@ -109,7 +106,7 @@ export default {
             var fd = $("#select_google_task_list").serialize();
             //fd['aspect_type_id'] = this.aspectTypeId;
             console.log(fd);
-            axios.post('/aspect/create', fd);
+            //axios.post('/aspect/create', fd);
             
         }
     }
