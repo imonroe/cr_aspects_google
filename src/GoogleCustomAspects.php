@@ -224,7 +224,12 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 	public function edit_form($id){
 		return parent::edit_form($id);
 	}
+
 	public function display_aspect(){
+		return 'temporary.';
+	}
+
+	public function display_aspect_old(){
 		$settings = (!is_null($this->aspect_notes)) ? json_decode($this->aspect_notes, true) : json_decode($this->notes_schema(), true);
 		if (empty($settings['list_id']) || $settings['list_id'] == '@default'){
 			$function_id = '';
