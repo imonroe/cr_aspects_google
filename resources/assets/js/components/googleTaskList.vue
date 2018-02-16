@@ -73,7 +73,7 @@ export default {
             var self = this;
             console.log('Trying to add new task: ' + self.new_task_title);
             var fd = $("#new_task").serialize();
-            axios.post('gtasks/task/add', fd)
+            axios.post('/gtasks/task/add', fd)
             .then(function(response){
                 self.fetchList();
             })
