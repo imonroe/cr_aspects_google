@@ -286,7 +286,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
         </script>
 </div>
 OUTPUT_STRING;
-		return $output;
+		//return $output;
 	}
 	public function parse(){}
 	public function lambda_function(){
