@@ -48,7 +48,7 @@
 
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title"></input>        
+                <input type="text" id="title" name="title">{{ title }}</input>        
             </div>
 
             <div class="form-group">
@@ -93,6 +93,9 @@ export default {
     mounted() {
         this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         this.available_lists = this.fetchLists();
+        if ( this.doUpdate ){
+            $('#settings_list_id').val( this.settingsListId );
+        }
     },
     props: [
         'aspectId',
