@@ -35,8 +35,6 @@
             <button type="submit" class="btn btn-default">Select</button>
         </form>
 
-        '/aspect/' + self.aspectId + '/edit'
-
         <form v-else id="select_google_task_list" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
         <!-- the edit version. -->
             <input v-if="this.doUpdate == true" type="hidden" name="aspect_id" :value="aspectId"></input>
