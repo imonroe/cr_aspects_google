@@ -222,7 +222,10 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		return $output;
 	}
 	public function edit_form($id){
-		return parent::edit_form($id);
+		$lists_agent =  new GoogleController;
+		$output = '';
+		$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type-id="'.$this->aspect_type.'" ></new-google-tasklist>';
+		return $output;
 	}
 
 	public function display_aspect(){
