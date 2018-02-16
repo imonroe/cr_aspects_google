@@ -10,7 +10,7 @@
             </ul>
         </p>
 
-        <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" :action="actionPath" >
+        <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
         <!-- the create version. -->
             <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
@@ -32,7 +32,7 @@
                 </select>
             </div>
             
-            <button type="submit" class="btn btn-default">Select</button>
+            <button type="submit" class="btn btn-default">Submit</button>
         </form>
 
 
@@ -59,7 +59,7 @@
                 </select>
             </div>
             
-            <button type="submit" class="btn btn-default">Select</button>
+            <button type="submit" class="btn btn-default">Submit</button>
         </form>
 
         <p> - or - </p>
@@ -138,6 +138,7 @@ export default {
                     console.log('Created list successfully.');
                 }
                 self.fetchLists();
+                $("#task_list_name").val('');
                 console.log(response.data);
             })
             .catch(function(error){
