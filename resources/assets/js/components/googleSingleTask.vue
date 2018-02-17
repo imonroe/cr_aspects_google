@@ -10,7 +10,7 @@
     <div>
 
         <span>
-            <input type="checkbox" id="checkbox" v-model="checked" v-on:change="itemChecked">
+            <input type="checkbox" v-on:change="itemChecked">
         </span>
 
         <span id="title">
@@ -53,7 +53,7 @@ export default {
                 axios.post('/gtasks/task/complete', fd_string)
                     .then(function(response){
                         self.$emit('refresh');
-                        console.log(response);
+                        //console.log(response);
                     })
                     .catch(function(error){
                         console.log(error);
