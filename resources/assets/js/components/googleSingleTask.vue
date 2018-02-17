@@ -7,7 +7,7 @@
 </style>
 
 <template>
-    <div id="item_x">
+    <div>
 
         <span>
             <input type="checkbox" id="checkbox" v-model="checked" v-on:change="itemChecked">
