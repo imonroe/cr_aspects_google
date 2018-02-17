@@ -76,6 +76,7 @@ export default {
             axios.post('/gtasks/task/add', fd)
             .then(function(response){
                 self.fetchList();
+                self.new_task_title = '';
             })
             .catch(function(error){
                 console.log(error);
