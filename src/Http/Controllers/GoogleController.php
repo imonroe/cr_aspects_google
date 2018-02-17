@@ -218,7 +218,7 @@ class GoogleController extends Controller{
 
 		// dd($gtask);
 
-		$result = $todo_service->tasks->update($list_id, $task['task_id'], $gtask);
+		$result = $todo_service->tasks->update($list_id, $input['task_id'], $gtask);
 		echo('Got back: '.$result);
 	}
 
