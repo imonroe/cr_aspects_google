@@ -6,7 +6,7 @@
     <div id="item_x">
 
         <span>
-            <input type="checkbox" id="checkbox" v-model="checked">
+            <input type="checkbox" id="checkbox" v-model="checked" v-on:change"itemChecked">
         </span>
 
         <span>
@@ -25,8 +25,6 @@ export default {
     data () {
       return {
         csrf: '',
-        taskList: '',
-        task: '',
         checked: ''
       }
     },
@@ -39,7 +37,10 @@ export default {
     ],
     computed: {},
     methods: {
-        
+        itemChecked(){
+            //
+            console.log('Check box activated!');
+        }
     }
 };
 

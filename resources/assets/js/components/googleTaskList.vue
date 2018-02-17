@@ -11,7 +11,7 @@
             <li v-for="todo in taskList.items"> {{ todo.title }} </li>
         </ul>
 
-        <div v-for="todo in taskList.items"> <google-single-task :task="todo" :task-list="taskList"></google-single-task> </div>
+        <div v-for="todo in taskList.items"> <google-single-task :task="todo" :task-list="settingsListId"></google-single-task> </div>
 
 
         <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
