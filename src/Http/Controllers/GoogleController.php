@@ -205,6 +205,7 @@ class GoogleController extends Controller{
 	}
 
 	public function complete_task(Request $request){
+		$this->build_client();
 		$task = $request->json()->all();
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
 		$list_id = !empty($task['list_id']) ? $task['list_id'] : '@default';
