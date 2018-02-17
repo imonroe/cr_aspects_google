@@ -6,7 +6,7 @@
     <div id="item_x">
 
         <span>
-            <input type="checkbox" id="checkbox" v-model="checked" v-on:change"itemChecked">
+            <input type="checkbox" id="checkbox" v-model="checked" v-on:change="itemChecked">
         </span>
 
         <span>
