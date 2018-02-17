@@ -10,7 +10,7 @@
     <div>
 
         <span>
-            <input type="checkbox" class="checkbox" v-model="gTask.completed" v-on:click="itemChecked">
+            <input type="checkbox" v-model="gTask.completed" v-on:click="itemChecked">
         </span>
 
         <span id="title">
