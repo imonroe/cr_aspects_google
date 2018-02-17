@@ -205,12 +205,16 @@ class GoogleController extends Controller{
 	}
 
 	public function complete_task(Request $request){
+
+		dd($request-all());
+
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
 		$list_id = !empty($request->input('list_id')) ? $request->input('list_id') : '@default';
 		$todo_service = new Google_Service_Tasks($this->client);
 		$task = $todo_service->tasks->get($list_id, $request->input('task_id') );
 		$task->setStatus('completed');
 		$result = $todo_service->tasks->update($list_id, $task->getId(), $task);
+		echo('Got back: '.$result);
 	}
 
 	public function remove_task(Request $request){
