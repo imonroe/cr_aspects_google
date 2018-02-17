@@ -4,12 +4,10 @@
 <template>
     <div id="new_list_form">
         
-        <p>Available lists:
-            <ul>
-                <li v-for="list in available_lists.items"> {{ list.title }} </li>
-            </ul>
-        </p>
-
+        <p>Available lists:</p>
+        <ul>
+            <li v-for="list in available_lists.items" :key="list.id"> {{ list.title }} </li>
+        </ul>
         <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
         <!-- the create version. -->
             <input type="hidden" name="_token" :value="csrf"></input>
@@ -28,7 +26,7 @@
                 <label for="settings_list_id">Use this task list</label>
                 <select class="form-control" id="settings_list_id" name="settings_list_id">
                     <option disabled value=""> -- Select a list -- </option>
-                    <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
+                    <option v-for="list in available_lists.items" v-bind:value="list.id" :key="list.id">{{ list.title }}</option>
                 </select>
             </div>
             
@@ -55,7 +53,7 @@
                 <label for="settings_list_id">Use this task list</label>
                 <select class="form-control" id="settings_list_id" name="settings_list_id" v-model="selected_list">
                     <option disabled value=""> -- Select a list -- </option>
-                    <option v-for="list in available_lists.items" v-bind:value="list.id">{{ list.title }}</option>
+                    <option v-for="list in available_lists.items" v-bind:value="list.id" :key="list.id">{{ list.title }}</option>
                 </select>
             </div>
             

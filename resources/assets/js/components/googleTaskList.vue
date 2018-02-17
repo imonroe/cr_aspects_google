@@ -6,7 +6,7 @@
 
     <div>
          
-        <div v-for="todo in taskList.items"> 
+        <div v-for="todo in taskList.items" :key="todo.id"> 
             <google-single-task :task="todo" :task-list="settingsListId" v-on:refresh="fetchList"></google-single-task> 
         </div>
 
