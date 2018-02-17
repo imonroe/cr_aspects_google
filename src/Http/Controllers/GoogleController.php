@@ -216,8 +216,6 @@ class GoogleController extends Controller{
 		$gtask = $todo_service->tasks->get($list_id, $input['task_id'] );
 		$gtask->setStatus('completed');
 
-		// dd($gtask);
-
 		$result = $todo_service->tasks->update($list_id, $input['task_id'], $gtask);
 		echo( 'Got back: '.json_encode($result) );
 	}

@@ -42,7 +42,7 @@ export default {
     computed: {},
     methods: {
         itemChecked(){
-            //
+            var self = this;
             console.log('Check box activated!');
             if (this.checked){
                 var fd = new Object();
@@ -52,6 +52,7 @@ export default {
                 var fd_string = JSON.stringify(fd);
                 axios.post('/gtasks/task/complete', fd_string)
                     .then(function(response){
+                        self.$emit('refresh');
                         console.log(response);
                     })
                     .catch(function(error){
