@@ -44,22 +44,19 @@ export default {
         itemChecked(){
             var self = this;
             console.log('Check box activated!');
-            if (this.checked){
-                var fd = new Object();
-                fd._token = this.csrf;
-                fd.list_id = this.taskList;
-                fd.task_id = this.task.id;
-                var fd_string = JSON.stringify(fd);
-                axios.post('/gtasks/task/complete', fd_string)
-                    .then(function(response){
-                        self.$emit('refresh');
-                        //console.log(response);
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
-            }
-            
+            var fd = new Object();
+            fd._token = this.csrf;
+            fd.list_id = this.taskList;
+            fd.task_id = this.task.id;
+            var fd_string = JSON.stringify(fd);
+            axios.post('/gtasks/task/complete', fd_string)
+                .then(function(response){
+                    self.$emit('refresh');
+                    //console.log(response);
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
         }
     }
 };
