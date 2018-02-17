@@ -1,5 +1,9 @@
 <style scoped>
 
+    .strikethrough{
+       text-decoration: line-through; 
+    }
+
 </style>
 
 <template>
@@ -9,7 +13,7 @@
             <input type="checkbox" id="checkbox" v-model="checked" v-on:change="itemChecked">
         </span>
 
-        <span>
+        <span id="title" :class="{ checked: strikethrough}">
             {{ task.title }}
         </span>
 
@@ -40,6 +44,7 @@ export default {
         itemChecked(){
             //
             console.log('Check box activated!');
+            
         }
     }
 };
