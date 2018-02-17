@@ -219,7 +219,7 @@ class GoogleController extends Controller{
 		// dd($gtask);
 
 		$result = $todo_service->tasks->update($list_id, $input['task_id'], $gtask);
-		echo('Got back: '.$result);
+		echo( 'Got back: '.json_encode($result) );
 	}
 
 	public function remove_task(Request $request){
