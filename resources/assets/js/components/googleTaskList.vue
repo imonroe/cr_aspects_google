@@ -2,16 +2,17 @@
 
 </style>
 
-
-
 <template>
 
     <div>
-        <p>Holding pattern.</p> 
+         
 
         <ul>
             <li v-for="todo in taskList.items"> {{ todo.title }} </li>
         </ul>
+
+        <div v-for="todo in taskList.items"> <google-single-task :task="todo" :task-list="taskList"></google-single-task> </div>
+
 
         <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
             <input type="hidden" name="_token" :value="csrf">
@@ -26,8 +27,6 @@
     </div>
 
 </template>
-
-
 
 <script>
 export default {
