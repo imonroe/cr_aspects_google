@@ -29,7 +29,7 @@ export default {
     data () {
       return {
         csrf: '',
-        checked: ''
+        checked: false
       }
     },
     mounted() {
