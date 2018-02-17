@@ -13,7 +13,7 @@
             <input type="checkbox" id="checkbox" v-model="checked" v-on:change="itemChecked">
         </span>
 
-        <span id="title" :class="{ strikethrough: checked}">
+        <span id="title">
             {{ task.title }}
         </span>
 
