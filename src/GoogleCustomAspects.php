@@ -254,8 +254,8 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
-		$contact_array = json_decode($this->aspect_data, true);
-		return '<google-calendar aspect-data="" aspect-id="'.$this->aspect_id.'" aspect-notes="" aspect-source="" aspect-type="'.$this->aspect_type.'" settings-calendar-id="'.$contact_array['calendar_id'].'" subject-id="" ></google-calendar>';
+		$settings = $this->get_aspect_notes_array();
+		return '<google-calendar aspect-data="" v-bind:aspect-id="'.$this->id.'" aspect-notes="" aspect-source="" v-bind:aspect-type="'.$this->aspect_type.'" settings-calendar-id="'.$settings['calendar_id'].'" v-bind:subject-id="'.$this->subject_id().'" ></google-calendar>';
 
 	}
 	public function OLD_display_aspect(){
