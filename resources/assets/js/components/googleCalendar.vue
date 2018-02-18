@@ -33,7 +33,6 @@
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             this.setCalendar();
             this.fetchCalendar();
-            this.currentDate = new Date();
         },
         props: [
             'aspectId',
@@ -52,6 +51,7 @@
         methods: {
             setCalendar(){
                 this.calendarId = this.settingsCalendarID;
+                this.currentDate = new Date();
                 this.startDate = new Date();
                 var tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);

@@ -254,7 +254,7 @@ class GoogleController extends Controller{
 			'timeMax' => $end_time,
 		);
 		$event_list = $calendar_service->events->listEvents($calendar_id, $optParams);
-		return json_encode($calendar_list);
+		return json_encode($event_list);
 	}
 
 	public function get_event(Request $request){
