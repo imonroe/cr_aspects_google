@@ -26,7 +26,7 @@
         },
         mounted() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
-            this.fetchCalendar();
+            // this.fetchCalendar();
             $("#calendar_widget").datepicker();
         },
         props: [
