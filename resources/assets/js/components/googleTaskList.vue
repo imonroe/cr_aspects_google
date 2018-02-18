@@ -63,7 +63,7 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-            jQuery.rejigger();
+            window.$.rejigger();
         }, 
         addNewTask(){
             var self = this;
