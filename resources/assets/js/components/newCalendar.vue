@@ -10,6 +10,9 @@
 
         <div>
             Available calendars
+            <ul>
+                <li v-for="calendar in calendarList.data.items" :key="calendar.id"> {{ calendar.summary }} </li>
+            </ul>
         </div>
 
         <div>
