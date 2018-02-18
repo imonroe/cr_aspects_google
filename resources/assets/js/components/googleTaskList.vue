@@ -79,6 +79,7 @@ export default {
                 console.log(error);
             });
             $.rejigger();
+            
         }
     }
 };
