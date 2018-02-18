@@ -234,70 +234,6 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		return '<google-tasklist settings-list-id="'.$settings['list_id'].'" ></google-tasklist>';
 	}
 
-	public function display_aspect_old(){
-		$settings = (!is_null($this->aspect_notes)) ? json_decode($this->aspect_notes, true) : json_decode($this->notes_schema(), true);
-		if (empty($settings['list_id']) || $settings['list_id'] == '@default'){
-			$function_id = '';
-		} else {
-			$function_id = $settings['list_id'];
-		}
-		$spinner = '<center>'. \imonroe\ana\Ana::loading_spinner() . '</center>';
-		$csfr_token = csrf_token();
-		$output = <<<OUTPUT_STRING
-<div class="widget" id="todo_list_{$settings['css_id']}">
-		<h3>{$settings['list_title']}</h3>
-        <form class="form-inline" id="new_task_form_{$settings['css_id']}">
-          <input name="due" type="hidden" value="" />
-		  <input name="_token" type="hidden" value="$csfr_token" >
-          <input name="task_list" type="hidden" value="{$function_id}" >
-          <input name="action" type="hidden" value="new_todo_item" >
-          <input name="new_task_title" type="text" class="form-control" id="new_task_title" placeholder="Add a new task">
-          <button type="submit" class="btn" id="new_task_submit">Submit</button>
-        </form>
-    	<div id="todo_stage_{$settings['css_id']}" style="">$spinner</div>
-        <script type="text/javascript">
-			$(function(){
-				$("#new_task_form_{$settings['css_id']}").submit(function(event){
-					event.preventDefault();
-					var fd = $(this).serialize();
-					console.log(fd);
-					var url = '/gtasks';
-					$.ajax({
-							type: 'POST',
-							mimeType: 'multipart/form-data',
-							url: url,
-							data: fd
-					})
-					.done(function(html){
-							$.get( "/gtasks/{$function_id}")
-								.done(function( data ) {
-									$("#todo_stage_{$settings['css_id']}").html(data);
-								});
-							$("#new_task_form_{$settings['css_id']}").trigger("reset");
-					});
-				});// end task submit
-				$.get( "/gtasks/{$function_id}")
-            			.done(function( data ) {
-            			$("#todo_stage_{$settings['css_id']}").html(data);
-        		});
-			});
-
-			function closeTodoItem_$function_id(item){
-				var item_id = item.getAttribute('id');
-				$.post( "/gtasks", 
-						{ action: "complete_todo_item", task_id: item_id, _token: '$csfr_token', list_id:'{$function_id}'})
-            			.done(function( data ) {
-            				$.get( "/gtasks/{$function_id}")
-							.done(function( data ) {
-							$("#todo_stage_{$settings['css_id']}").html(data);
-						});
-        		});
-			}
-        </script>
-</div>
-OUTPUT_STRING;
-		//return $output;
-	}
 	public function parse(){}
 	public function lambda_function(){
 		return 'lambda_function output';
@@ -308,9 +244,7 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 
 	public function notes_schema(){
 		$settings = json_decode(parent::notes_schema(), true);
-		$settings['calendar_title'] = 'Calendar';
 		$settings['calendar_id'] = 'primary';
-		$settings['css_id'] = 'default_todo';
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){

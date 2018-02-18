@@ -226,11 +226,35 @@ class GoogleController extends Controller{
 	}
 
 
-
-
-
 	// Calendar stuff.
-	public function get_calendar($calendar_id='primary'){
+	public function list_calendars(Request $request){
+		
+		$this->build_client();
+		$calendar_list = $this->client->calendarList->listCalendarList();
+		return json_encode($calendar_list);
+
+	}
+	public function create_calendar(Request $request){
+		$this->build_client();
+	}
+	public function get_calendar(Request $request){
+		$this->build_client();
+	}
+	public function get_event(Request $request){
+		$this->build_client();
+	}
+	public function create_event(Request $request){
+		$this->build_client();
+	}
+	public function edit_event(Request $request){
+		$this->build_client();
+	}
+	public function delete_event(Request $request){
+		$this->build_client();
+	}
+
+
+	public function get_calendar_old($calendar_id='primary'){
 		$calendar_service = new Google_Service_Calendar($this->client);
 		$optParams = array(
 			'timeMin' => Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60))),
@@ -248,7 +272,7 @@ class GoogleController extends Controller{
 		return $output;
 	}
 
-	public function edit_calendar(Request $request){
+	public function edit_calendar_old(Request $request){
 		switch($request->input('action')){
 			case "new_appointment":
 				$calendar_service = new Google_Service_Calendar($this->client);
@@ -257,6 +281,7 @@ class GoogleController extends Controller{
 				break;
 		}
 	}
+
 
 	// Search stuff
 	public function google_search($query){
