@@ -254,7 +254,7 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
-		return 'This is the display at the moment.';
+		return '<google-calendar></google-calendar>';
 
 	}
 	public function OLD_display_aspect(){

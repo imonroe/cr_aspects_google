@@ -11,4 +11,4 @@ Vue.component('new-google-tasklist', require('./newTaskList.vue'));
 Vue.component('google-tasklist', require('./googleTaskList.vue'));
 
 Vue.component('new-google-calendar', require('./newCalendar.vue'));
-
+Vue.component('google-calendar', require('./googleCalendar.vue'));
