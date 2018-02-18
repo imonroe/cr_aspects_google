@@ -50,7 +50,7 @@
         },
         methods: {
             setCalendar(){
-                this.calendarId = this.settingsCalendarID;
+                this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
                 this.startDate = new Date();
                 var tomorrow = new Date();
