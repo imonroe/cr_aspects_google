@@ -24,14 +24,16 @@
                 csrf: '',
                 calendarId: '',
                 calendar: '',
-                currentDate: ''
+                currentDate: '',
+                startDate: '',
+                endDate: ''
             }
         },
         mounted() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
-            // this.fetchCalendar();
+            this.setCalendar();
+            this.fetchCalendar();
             this.currentDate = new Date();
-
         },
         props: [
             'aspectId',
@@ -45,28 +47,27 @@
             'title'
         ],
         computed: {
-            doUpdate: function(){
-                if (typeof this.aspectId === 'undefined' || this.aspectId === null) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
-            actionPath: function(){
-                if ( this.doUpdate ){
-                    var action_path = '/aspect/' + this.aspectId + '/edit';
-                    return action_path;
-                } else {
-                    return '/aspect/create';
-                }
-            }
+
         },
         methods: {
+            setCalendar(){
+                this.calendarId = this.settingsCalendarID;
+                this.startDate = new Date();
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                this.endDate = tomorrow;
+            },
             fetchCalendar(){
                 var self=this;
-                axios.get('/gcal/available_calendars')
+                var fd = new Object();
+                fd._token = this.csfr;
+                fd.start_date = this.startDate;
+                fd.end_date = this.endDate;
+                fd.calendar_id = this.calendarId;
+                var fd_string = JSON.stringify(fd);
+                axios.get('/gcal/calendar', fd_string)
                     .done(function(response){
-                        self.calendarList = response;
+                        self.calendar = response;
                         console.log(response);
                     })
                     .error(function(error){

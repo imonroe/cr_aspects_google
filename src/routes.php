@@ -45,13 +45,13 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
             Route::get('gcal/available_calendars', 'GoogleController@list_calendars');
             Route::get('gcal/calendar', 'GoogleController@get_calendar');
             Route::post('gcal/calendar/create', 'GoogleController@create_calendar');
-            Route::post('gcal/calendar/create', 'GoogleController@create_calendar');
+            Route::post('gcal/calendar/{calendar_id}/edit', 'GoogleController@create_calendar');
             Route::get('gcal/event', 'GoogleController@get_event');
             Route::post('gcal/event/create', 'GoogleController@create_event');
             Route::post('gcal/event/edit', 'GoogleController@edit_eventt');
             Route::post('gcal/event/delete', 'GoogleController@delete_event');
 
-            
+
             // Routes for Google Contacts
 
 
