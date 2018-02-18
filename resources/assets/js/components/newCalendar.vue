@@ -34,7 +34,7 @@
         },
         mounted() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
-            this.fetchList();
+            this.fetchCalendars();
         },
         props: [
             'aspectId',
