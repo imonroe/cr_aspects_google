@@ -230,7 +230,8 @@ class GoogleController extends Controller{
 	public function list_calendars(Request $request){
 		
 		$this->build_client();
-		$calendar_list = $this->client->calendarList->listCalendarList();
+		$calendar_service = new Google_Service_Calendar($this->client);
+		$calendar_list = $calendar_service->calendarList->listCalendarList();
 		return json_encode($calendar_list);
 
 	}
