@@ -248,12 +248,16 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
-		return parent::create_form($subject_id, $this->aspect_type);
+		return '<new-google-calendar> </new-google-calendar>';
 	}
 	public function edit_form($id){
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
+		return 'This is the display at the moment.';
+
+	}
+	public function OLD_display_aspect(){
 		$settings = (!is_null($this->aspect_notes)) ? json_decode($this->aspect_notes, true) : json_decode($this->notes_schema(), true);
 		$calendar_title = $settings['calendar_title'];
 		$csfr_token = csrf_token();
