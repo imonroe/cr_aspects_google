@@ -5,29 +5,33 @@
 <template>
 
     <div>
-        <div id="calendar_widget"></div>
-
-
+        <datepicker :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+        <p> Some text goes here in my calendar widget.</p>
     </div>
 
 </template>
 
 
 <script>
+    import Datepicker from 'vuejs-datepicker';
     export default {
-        components: {},
+        components: {
+            Datepicker
+        },
         mixins: [],
         data () {
             return {
                 csrf: '',
                 calendarId: '',
-                calendar: ''
+                calendar: '',
+                currentDate: ''
             }
         },
         mounted() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             // this.fetchCalendar();
-            $("#calendar_widget").datepicker();
+            this.currentDate = new Date();
+
         },
         props: [
             'aspectId',
@@ -71,6 +75,9 @@
 
             },
             createCalendar(){
+
+            },
+            dateChosen(){
 
             }
         }
