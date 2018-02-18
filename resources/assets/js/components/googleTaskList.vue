@@ -59,11 +59,11 @@ export default {
             .then(function(response){
                 self.taskList = response.data;
                 console.log(response.data);
-                $.rejigger();
             })
             .catch(function(error){
                 console.log(error);
             });
+            $.rejigger();
         }, 
         addNewTask(){
             var self = this;
