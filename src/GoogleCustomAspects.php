@@ -248,7 +248,7 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
-		return '<new-google-calendar> </new-google-calendar>';
+		return '<new-google-calendar aspect-type="'. $this->aspect_type .'"> </new-google-calendar>';
 	}
 	public function edit_form($id){
 		return parent::edit_form($id);
