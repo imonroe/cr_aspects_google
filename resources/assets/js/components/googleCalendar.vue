@@ -99,6 +99,7 @@
 
             },
             dateChosen(date_object){
+                console.log(date_object);
                 this.startDate = date_object;
                 var tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
