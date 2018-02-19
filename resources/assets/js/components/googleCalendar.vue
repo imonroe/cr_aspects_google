@@ -64,12 +64,10 @@
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
                 this.startDate = new Date();
-                this.startDate.setDate(this.currentDate);
                 this.startDate.setHours(0);
                 this.startDate.setMinutes(0);
                 this.startDate.setSeconds(1);
                 this.endDate = new Date();
-                this.endDate.setDate(this.startDate);
                 this.endDate.setHours(23);
                 this.endDate.setMinutes(59);
                 this.endDate.setSeconds(59);
@@ -108,12 +106,11 @@
             },
             dateChosen(date_object){
                 console.log(date_object);
-                this.startDate = date_object;
+                this.startDate = new Date(date_object);
                 this.startDate.setHours(0);
                 this.startDate.setMinutes(0);
                 this.startDate.setSeconds(1);
-                this.endDate = new Date();
-                this.endDate.setDate(this.startDate);
+                this.endDate = new Date( this.startDate.toDateString() );
                 this.endDate.setHours(23);
                 this.endDate.setMinutes(59);
                 this.endDate.setSeconds(59);
