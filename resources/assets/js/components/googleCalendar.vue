@@ -71,7 +71,7 @@
             formatDate(googleDate){
                 // This is a weird thing, because google uses strange date objects in their JSON.
                 var dateObject;
-                if ( googleDate.dateTime.length > 0 ){
+                if ( googleDate.dateTime !=null ){
                     dateObject = new Date(googleDate.dateTime);
                 } else {
                     dateObject = new Date(googleDate.date);
