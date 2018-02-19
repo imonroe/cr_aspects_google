@@ -10,7 +10,6 @@
 
 
         <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
-
             <div class="form-group">
                 <input type="text" class="form-control" id="new_event_name" name="new_event_name" placeholder="Add a event" v-model="new_event_name" >
             </div>
@@ -125,6 +124,8 @@
                         // self.$emit('refresh');
                         console.log(response);
                         self.fetchCalendar();
+                        self.new_event_name = '';
+                        $.rejigger();
                     })
                     .catch(function(error){
                         console.log(error);
