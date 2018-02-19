@@ -9,7 +9,7 @@
         <p> Some text goes here in my calendar widget.</p>
 
         <div>
-            <p v-for"event in calendar.data.items" :key="event.id"> {{ event.summary }} </p>
+            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} </p>
         </div>
 
     </div>
