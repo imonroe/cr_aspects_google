@@ -28,7 +28,7 @@
             return {
                 csrf: '',
                 calendarId: '',
-                calendar: '',
+                calendar: {"data": {"items": []} },
                 currentDate: '',
                 startDate: '',
                 endDate: ''
