@@ -14,7 +14,7 @@
         <p> Some text goes here in my calendar widget.</p>
 
         <div>
-            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} - {{ formatDate(event.start.dateTime) }} </p>
+            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} - {{ formatDate(event.start) }} </p>
         </div>
 
     </div>
