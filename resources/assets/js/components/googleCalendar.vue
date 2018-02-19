@@ -13,7 +13,7 @@
 
         <div>
             <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} <br /> 
-            {{ formatDate(event.start) }} - {{ formatDate(event.end) }}</p>
+            <span class="small">{{ formatDate(event.start) }} - {{ formatDate(event.end) }}</span></p>
         </div>
 
     </div>
