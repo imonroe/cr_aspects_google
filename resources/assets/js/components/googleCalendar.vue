@@ -85,8 +85,10 @@
                 fd.start_date = this.startDate;
                 fd.end_date = this.endDate;
                 fd.calendar_id = this.calendarId;
-                var fd_string = JSON.stringify(fd);
-                axios.get('/gcal/calendar', fd)
+                //var fd_string = JSON.stringify(fd);
+                var data = new Object();
+                data.params = fd;
+                axios.get('/gcal/calendar', data)
                     .then(function(response){
                         self.calendar = response;
                         console.log(response);
