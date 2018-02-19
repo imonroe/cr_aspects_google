@@ -9,7 +9,7 @@
         <p> Some text goes here in my calendar widget.</p>
 
         <div>
-            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} </p>
+            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} - {{ this.formatDate(event.start.dateTime) }} </p>
         </div>
 
     </div>
@@ -19,6 +19,7 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import moment from 'moment';
     export default {
         components: {
             Datepicker
@@ -61,6 +62,9 @@
                 var tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 this.endDate = tomorrow;
+            },
+            formatDate(dateObject){
+                return moment(dateObject).format('llll');
             },
             fetchCalendar(){
                 var self=this;
