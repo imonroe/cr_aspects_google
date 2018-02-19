@@ -240,7 +240,7 @@ class GoogleController extends Controller{
 	}
 	public function get_calendar(Request $request){
 		$this->build_client();
-		$input = $request->json()->all();
+		$input = $request->all();
 		$calendar_id = ( !empty($input['calendar_id']) ) ? $input['calendar_id'] : 'primary';
 
 		$start_time = ( !empty($input['start_date']) ) ? Ana::google_datetime( strtotime($input['start_date']) ) : Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60)));
