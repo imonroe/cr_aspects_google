@@ -63,9 +63,15 @@
             setCalendar(){
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
-                this.startDate = new Date();
+                this.startDate.setDate(this.currentDate);
+                this.startDate.setHours(0);
+                this.startDate.setMinutes(0);
+                this.startDate.setSeconds(1);
                 var tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setDate(this.startDate);
+                tomorrow.setHours(23);
+                tomorrow.setMinutes(59);
+                tomorrow.setSeconds(59);
                 this.endDate = tomorrow;
             },
             formatDate(googleDate){
@@ -103,9 +109,17 @@
             dateChosen(date_object){
                 console.log(date_object);
                 this.startDate = date_object;
+                
+                this.startDate.setHours(0);
+                this.startDate.setMinutes(0);
+                this.startDate.setSeconds(1);
                 var tomorrow = new Date();
-                tomorrow.setDate(this.startDate.getDate() + 1);
+                tomorrow.setDate(this.startDate);
+                tomorrow.setHours(23);
+                tomorrow.setMinutes(59);
+                tomorrow.setSeconds(59);
                 this.endDate = tomorrow;
+
                 this.fetchCalendar();
             }
         }
