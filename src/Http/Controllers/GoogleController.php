@@ -253,7 +253,7 @@ class GoogleController extends Controller{
 			'singleEvents' => true,
 			'timeMax' => $end_time,
 		);
-		dd($input, $optParams);
+		//dd($input, $optParams);
 		$event_list = $calendar_service->events->listEvents($calendar_id, $optParams);
 		return json_encode($event_list);
 	}
