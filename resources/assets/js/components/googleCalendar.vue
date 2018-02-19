@@ -10,11 +10,10 @@
 
     <div >
         <datepicker class="centered" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
-        
-        <p> Some text goes here in my calendar widget.</p>
 
         <div>
-            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} - {{ formatDate(event.start) }} </p>
+            <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} <br /> 
+            {{ formatDate(event.start) }} - {{ formatDate(event.end) }}</p>
         </div>
 
     </div>
@@ -43,7 +42,6 @@
         created() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             this.setCalendar();
-            this.fetchCalendar();
         },
         props: [
             'aspectId',
@@ -63,14 +61,7 @@
             setCalendar(){
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
-                this.startDate = new Date();
-                this.startDate.setHours(0);
-                this.startDate.setMinutes(0);
-                this.startDate.setSeconds(1);
-                this.endDate = new Date();
-                this.endDate.setHours(23);
-                this.endDate.setMinutes(59);
-                this.endDate.setSeconds(59);
+                this.dateChosen(this.currentDate);
             },
             formatDate(googleDate){
                 // This is a weird thing, because google uses strange date objects in their JSON.
@@ -89,10 +80,7 @@
                 fd.start_date = this.startDate;
                 fd.end_date = this.endDate;
                 fd.calendar_id = this.calendarId;
-                //var fd_string = JSON.stringify(fd);
-                var data = new Object();
-                data.params = fd;
-                axios.get('/gcal/calendar', data)
+                axios.get('/gcal/calendar', {params: fd})
                     .then(function(response){
                         self.calendar = response;
                         console.log(response);
@@ -114,7 +102,6 @@
                 this.endDate.setHours(23);
                 this.endDate.setMinutes(59);
                 this.endDate.setSeconds(59);
-
                 this.fetchCalendar();
             }
         }
