@@ -68,12 +68,11 @@
                 this.startDate.setHours(0);
                 this.startDate.setMinutes(0);
                 this.startDate.setSeconds(1);
-                var tomorrow = new Date();
-                tomorrow.setDate(this.startDate);
-                tomorrow.setHours(23);
-                tomorrow.setMinutes(59);
-                tomorrow.setSeconds(59);
-                this.endDate = tomorrow;
+                this.endDate = new Date();
+                this.endDate.setDate(this.startDate);
+                this.endDate.setHours(23);
+                this.endDate.setMinutes(59);
+                this.endDate.setSeconds(59);
             },
             formatDate(googleDate){
                 // This is a weird thing, because google uses strange date objects in their JSON.
@@ -110,16 +109,14 @@
             dateChosen(date_object){
                 console.log(date_object);
                 this.startDate = date_object;
-                
                 this.startDate.setHours(0);
                 this.startDate.setMinutes(0);
                 this.startDate.setSeconds(1);
-                var tomorrow = new Date();
-                tomorrow.setDate(this.startDate);
-                tomorrow.setHours(23);
-                tomorrow.setMinutes(59);
-                tomorrow.setSeconds(59);
-                this.endDate = tomorrow;
+                this.endDate = new Date();
+                this.endDate.setDate(this.startDate);
+                this.endDate.setHours(23);
+                this.endDate.setMinutes(59);
+                this.endDate.setSeconds(59);
 
                 this.fetchCalendar();
             }
