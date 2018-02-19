@@ -68,8 +68,14 @@
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 this.endDate = tomorrow;
             },
-            formatDate(date_string){
-                var dateObject = new Date(date_string);
+            formatDate(googleDate){
+                // This is a weird thing, because google uses strange date objects in their JSON.
+                var dateObject;
+                if ( googleDate.dateTime.length > 0 ){
+                    dateObject = new Date(googleDate.dateTime);
+                } else {
+                    dateObject = new Date(googleDate.date);
+                }
                 return moment(dateObject).format('llll');
             },
             fetchCalendar(){
