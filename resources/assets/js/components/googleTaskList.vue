@@ -64,6 +64,7 @@ export default {
                 console.log(error);
             });
             if (typeof $.rejigger === "function"){
+                // we only want to do this if the function is available.
                 $.rejigger();
             }
         }, 
