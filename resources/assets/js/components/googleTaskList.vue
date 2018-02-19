@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import $ from 'jquery';
 export default {
     components: {},
     mixins: [],
@@ -64,7 +63,9 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-            $.rejigger();
+            if (typeof $.rejigger === "function"){
+                $.rejigger();
+            }
         }, 
         addNewTask(){
             var self = this;
@@ -79,7 +80,7 @@ export default {
                 console.log(error);
             });
             $.rejigger();
-            
+
         }
     }
 };
