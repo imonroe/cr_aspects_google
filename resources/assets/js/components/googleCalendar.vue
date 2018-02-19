@@ -69,7 +69,7 @@
                 this.endDate = tomorrow;
             },
             formatDate(date_string){
-                var dateObject = Date(date_string);
+                var dateObject = new Date(date_string);
                 return moment(dateObject).format('llll');
             },
             fetchCalendar(){
