@@ -124,7 +124,7 @@
                     .then(function(response){
                         // self.$emit('refresh');
                         console.log(response);
-                        this.fetchCalendar();
+                        self.fetchCalendar();
                     })
                     .catch(function(error){
                         console.log(error);
