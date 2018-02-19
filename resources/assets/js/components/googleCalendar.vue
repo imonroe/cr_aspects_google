@@ -63,6 +63,7 @@
             setCalendar(){
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
+                this.startDate = new Date();
                 this.startDate.setDate(this.currentDate);
                 this.startDate.setHours(0);
                 this.startDate.setMinutes(0);
