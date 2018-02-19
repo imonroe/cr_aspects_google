@@ -102,7 +102,7 @@
                 console.log(date_object);
                 this.startDate = date_object;
                 var tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setDate(date_object.getDate() + 1);
                 this.endDate = tomorrow;
                 this.fetchCalendar();
             }
