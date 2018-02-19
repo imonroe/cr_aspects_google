@@ -8,15 +8,15 @@
 
         <datepicker class="center-block" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
 
-
-        <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
-            <div class="form-group">
-                <input type="text" class="form-control" id="new_event_name" name="new_event_name" placeholder="Add a event" v-model="new_event_name" >
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-
-
+        <div style="margin-top: .5em; margin-bottom: .5em;"> 
+            <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="new_event_name" name="new_event_name" placeholder="Add a event" v-model="new_event_name" >
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+        
         <div>
             <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} <br /> 
             <span class="small">{{ formatDate(event.start) }} - {{ formatDate(event.end) }}</span></p>
@@ -125,7 +125,7 @@
                         console.log(response);
                         self.fetchCalendar();
                         self.new_event_name = '';
-                        $.rejigger();
+                        window.$.rejigger();
                     })
                     .catch(function(error){
                         console.log(error);
