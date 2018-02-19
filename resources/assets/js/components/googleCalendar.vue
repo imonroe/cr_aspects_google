@@ -1,11 +1,16 @@
 <style scoped>
 
+    .centered {
+        margin: auto;
+    }
+
 </style>
 
 <template>
 
-    <div>
-        <datepicker :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+    <div >
+        <datepicker class="centered" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+        
         <p> Some text goes here in my calendar widget.</p>
 
         <div>
@@ -63,7 +68,8 @@
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 this.endDate = tomorrow;
             },
-            formatDate(dateObject){
+            formatDate(date_string){
+                var dateObject = Date(date_string);
                 return moment(dateObject).format('llll');
             },
             fetchCalendar(){
