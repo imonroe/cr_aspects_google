@@ -122,14 +122,14 @@
                 axios.post('/gcal/event/create', fd_string)
                     .then(function(response){
                         // self.$emit('refresh');
-                        console.log(response);
+                        // console.log(response);
                         self.fetchCalendar();
-                        self.new_event_name = '';
-                        window.$.rejigger();
+                        self.new_event_name = '';        
                     })
                     .catch(function(error){
                         console.log(error);
                     });
+                window.$.rejigger();
             }
         }
     };
