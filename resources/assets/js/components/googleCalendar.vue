@@ -1,15 +1,22 @@
 <style scoped>
 
-    .centered {
-        margin: auto;
-    }
-
 </style>
 
 <template>
 
     <div >
-        <datepicker class="centered" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+
+        <datepicker class="center-block" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+
+
+        <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="new_event_name" name="new_event_name" placeholder="Add a event" v-model="new_event_name" >
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
 
         <div>
             <p v-for="event in calendar.data.items" :key="event.id"> {{ event.summary }} <br /> 
@@ -36,7 +43,8 @@
                 calendar: {"data": {"items": []} },
                 currentDate: '',
                 startDate: '',
-                endDate: ''
+                endDate: '',
+                new_event_name: ''
             }
         },
         created() {
@@ -103,6 +111,24 @@
                 this.endDate.setMinutes(59);
                 this.endDate.setSeconds(59);
                 this.fetchCalendar();
+            },
+            addNewEvent(){
+                var self = this;
+                console.log('Adding new event!');
+                var fd = new Object();
+                fd._token = this.csrf;
+                fd.calendar_id = this.calendarId;
+                fd.new_event_name = this.new_event_name;
+                var fd_string = JSON.stringify(fd);
+                axios.post('/gcal/event/create', fd_string)
+                    .then(function(response){
+                        // self.$emit('refresh');
+                        console.log(response);
+                        this.fetchCalendar();
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    });
             }
         }
     };

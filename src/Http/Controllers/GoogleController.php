@@ -263,6 +263,14 @@ class GoogleController extends Controller{
 	}
 	public function create_event(Request $request){
 		$this->build_client();
+		$input = $request->json()->all();
+
+		$calendar_id = (!empty($input['calendar_id'])) ? $input['calendar_id'] : 'primary';
+		$new_event_name = $input['new_event_name'];
+
+		$calendar_service = new Google_Service_Calendar($this->client);
+		$result = $calendar_service->events->quickAdd( $calendar_id, $new_event_name );
+		return json_encode($result);
 	}
 	public function edit_event(Request $request){
 		$this->build_client();
