@@ -243,8 +243,8 @@ class GoogleController extends Controller{
 		$input = $request->json()->all();
 		$calendar_id = ( !empty($input['calendar_id']) ) ? $input['calendar_id'] : 'primary';
 
-		$start_time = ( !empty($input['start_date']) ) ? $input['start_date'] : Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60)));
-		$end_time = ( !empty( $input['end_date'] ) ) ? $input['end_date'] : Ana::google_datetime(strtotime('tomorrow 3:00AM'));
+		$start_time = ( !empty($input['start_date']) ) ? Ana::google_datetime( strtotime($input['start_date']) ) : Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60)));
+		$end_time = ( !empty( $input['end_date'] ) ) ? Ana::google_datetime( strtotime($input['end_date']) )  : Ana::google_datetime(strtotime('tomorrow 3:00AM'));
 
 		$calendar_service = new Google_Service_Calendar($this->client);
 		$optParams = array(
