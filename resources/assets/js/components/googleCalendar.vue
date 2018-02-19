@@ -34,7 +34,7 @@
                 endDate: ''
             }
         },
-        mounted() {
+        created() {
             this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             this.setCalendar();
             this.fetchCalendar();
