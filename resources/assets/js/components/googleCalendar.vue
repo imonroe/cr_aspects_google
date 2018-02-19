@@ -7,6 +7,11 @@
     <div>
         <datepicker :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
         <p> Some text goes here in my calendar widget.</p>
+
+        <div>
+            <p v-for"event in calendar.data.items" :key="event.id"> {{ event.summary }} </p>
+        </div>
+
     </div>
 
 </template>
