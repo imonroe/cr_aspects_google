@@ -94,13 +94,16 @@
                     .catch(function(error){
                         console.log(error);
                     });
-
             },
             createCalendar(){
 
             },
-            dateChosen(){
-
+            dateChosen(date_object){
+                this.startDate = date_object;
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                this.endDate = tomorrow;
+                fetchCalendar();
             }
         }
     };
