@@ -54,12 +54,13 @@ export default {
             this.$axios.get('/gtasks/list/'+self.settingsListId)
             .then(function(response){
                 self.taskList = response.data;
+                this.$rejigger();
                 console.log(response.data);
             })
             .catch(function(error){
                 console.log(error);
             });
-            this.$rejigger();
+            
         }, 
         addNewTask(){
             var self = this;
@@ -69,11 +70,12 @@ export default {
             .then(function(response){
                 self.fetchList();
                 self.new_task_title = '';
+                this.$rejigger();
             })
             .catch(function(error){
                 console.log(error);
             });
-            this.$rejigger();
+            
 
         }
     }
