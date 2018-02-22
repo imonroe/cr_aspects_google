@@ -12,7 +12,6 @@
 
         <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
             <input type="hidden" name="task_list" :value="settingsListId">
-
             <div class="form-group">
                 <input type="text" class="form-control" id="new_task_title" name="new_task_title" placeholder="Add a new task" v-model="new_task_title" >
             </div>
