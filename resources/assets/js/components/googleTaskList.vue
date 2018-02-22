@@ -11,7 +11,6 @@
         </div>
 
         <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
-            <input type="hidden" name="_token" :value="csrf">
             <input type="hidden" name="task_list" :value="settingsListId">
 
             <div class="form-group">
@@ -61,10 +60,7 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-            if (typeof $.rejigger === "function"){
-                // we only want to do this if the function is available.
-                this.$rejigger();
-            }
+            this.$rejigger();
         }, 
         addNewTask(){
             var self = this;
