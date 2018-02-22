@@ -6,7 +6,7 @@
 
     <div >
 
-        <datepicker class="center-block" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
+        <datepicker style="width:100%;" :value="currentDate" v-on:selected="dateChosen" :inline="true"></datepicker>
 
         <div style="margin-top: .5em; margin-bottom: .5em;"> 
             <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
