@@ -37,7 +37,6 @@
         mixins: [],
         data () {
             return {
-                csrf: '',
                 calendarId: '',
                 calendar: {"data": {"items": []} },
                 currentDate: '',
@@ -47,7 +46,6 @@
             }
         },
         created() {
-            this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             this.setCalendar();
         },
         props: [
@@ -83,11 +81,10 @@
             fetchCalendar(){
                 var self=this;
                 var fd = new Object();
-                fd._token = this.csfr;
                 fd.start_date = this.startDate;
                 fd.end_date = this.endDate;
                 fd.calendar_id = this.calendarId;
-                axios.get('/gcal/calendar', {params: fd})
+                this.$axios.get('/gcal/calendar', {params: fd})
                     .then(function(response){
                         self.calendar = response;
                         console.log(response);
@@ -115,11 +112,10 @@
                 var self = this;
                 console.log('Adding new event!');
                 var fd = new Object();
-                fd._token = this.csrf;
                 fd.calendar_id = this.calendarId;
                 fd.new_event_name = this.new_event_name;
                 var fd_string = JSON.stringify(fd);
-                axios.post('/gcal/event/create', fd_string)
+                this.$axios.post('/gcal/event/create', fd_string)
                     .then(function(response){
                         // self.$emit('refresh');
                         // console.log(response);
@@ -129,7 +125,7 @@
                     .catch(function(error){
                         console.log(error);
                     });
-                window.$.rejigger();
+                this.$rejigger();
             }
         }
     };

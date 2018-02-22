@@ -10,7 +10,6 @@
         </ul>
         <form v-if="this.doUpdate == false" id="select_google_task_list" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
         <!-- the create version. -->
-            <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
             <input type="hidden" name="subject_id" :value="subjectId"></input>
             <input type="hidden" name="aspect_data" value=""></input>
@@ -37,7 +36,6 @@
         <form v-else id="select_google_task_list" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
         <!-- the edit version. -->
             <input v-if="this.doUpdate == true" type="hidden" name="aspect_id" :value="aspectId"></input>
-            <input type="hidden" name="_token" :value="csrf"></input>
             <input type="hidden" name="aspect_type" :value="aspectType"></input>
             <input type="hidden" name="subject_id" :value="subjectId"></input>
             <input type="hidden" name="aspect_data" value=""></input>
@@ -81,7 +79,6 @@ export default {
     mixins: [],
     data () {
       return {
-        csrf: '',
         available_lists: '',  
         task_list_name: '', 
         selected_list: '',
@@ -90,7 +87,6 @@ export default {
       }
     },
     mounted() {
-        this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         this.available_lists = this.fetchLists();
         if ( this.doUpdate ){
             this.current_title = (this.title) ? this.title : '';
@@ -128,8 +124,8 @@ export default {
     methods: {
         createList(){
           var self = this;
-          var fd = $("#new_google_task_list").serialize();
-          axios.post('/gtasks/new_list', fd)
+          var fd = this.$jquery("#new_google_task_list").serialize();
+          this.$axios.post('/gtasks/new_list', fd)
             .then(function(response){
                 //self.available_lists = response.data;
                 if (response.data.kind == "tasks#taskList"){
@@ -145,7 +141,7 @@ export default {
         }, 
         fetchLists(){
             var self = this;
-            axios.get('/gtasks/available_lists')
+            this.$axios.get('/gtasks/available_lists')
             .then(function(response){
                 self.available_lists = response.data;
                 console.log(response.data);

@@ -19,7 +19,6 @@
             
             <form v-if="this.doUpdate == false" id="select_google_calendar" class="form-inline my-2 my-lg-0" method="POST" :action="actionPath" >
             <!-- the create version. -->
-                <input type="hidden" name="_token" :value="csrf"></input>
                 <input type="hidden" name="aspect_type" :value="aspectType"></input>
                 <input type="hidden" name="subject_id" :value="subjectId"></input>
                 <input type="hidden" name="aspect_data" value=""></input>
@@ -56,13 +55,11 @@
         mixins: [],
         data () {
             return {
-                csrf: '',
                 calendarList: '',
                 calendarId: ''
             }
         },
         mounted() {
-            this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
             this.fetchCalendars();
         },
         props: [
@@ -96,7 +93,7 @@
         methods: {
             fetchCalendars(){
                 var self=this;
-                axios.get('/gcal/available_calendars')
+                this.$axios.get('/gcal/available_calendars')
                     .done(function(response){
                         self.calendarList = response;
                         console.log(response);

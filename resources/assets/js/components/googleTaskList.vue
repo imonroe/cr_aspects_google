@@ -30,13 +30,11 @@ export default {
     mixins: [],
     data () {
       return {
-        csrf: '',
         taskList: '',
         new_task_title: '',
       }
     },
     mounted() {
-        this.csrf = window.axios.defaults.headers.common['X-CSRF-TOKEN'];
         this.fetchList();
     },
     props: [
@@ -55,7 +53,7 @@ export default {
         fetchList(){
             console.log('trying to fetch list.');
             var self = this;
-            axios.get('/gtasks/list/'+self.settingsListId)
+            this.$axios.get('/gtasks/list/'+self.settingsListId)
             .then(function(response){
                 self.taskList = response.data;
                 console.log(response.data);
@@ -65,14 +63,14 @@ export default {
             });
             if (typeof $.rejigger === "function"){
                 // we only want to do this if the function is available.
-                $.rejigger();
+                this.$rejigger();
             }
         }, 
         addNewTask(){
             var self = this;
             console.log('Trying to add new task: ' + self.new_task_title);
-            var fd = $("#new_task").serialize();
-            axios.post('/gtasks/task/add', fd)
+            var fd = this.$jquery("#new_task").serialize();
+            this.$axios.post('/gtasks/task/add', fd)
             .then(function(response){
                 self.fetchList();
                 self.new_task_title = '';
@@ -80,7 +78,7 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-            $.rejigger();
+            this.$rejigger();
 
         }
     }
