@@ -42,7 +42,6 @@ export default {
     methods: {
         itemChecked(){
             var self = this;
-            console.log('Check box activated!');
             var fd = new Object();
             fd.list_id = this.taskList;
             fd.task_id = this.gTask.id;

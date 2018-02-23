@@ -88,11 +88,12 @@
                     .then(function(response){
                         self.calendar = response;
                         console.log(response);
+                        self.$rejigger();
                     })
                     .catch(function(error){
                         console.log(error);
                     });
-                this.$rejigger();
+                
             },
             createCalendar(){
 
@@ -118,15 +119,12 @@
                 var fd_string = JSON.stringify(fd);
                 this.$axios.post('/gcal/event/create', fd_string)
                     .then(function(response){
-                        // self.$emit('refresh');
-                        // console.log(response);
+                        self.new_event_name = ''; 
                         self.fetchCalendar();
-                        self.new_event_name = '';        
                     })
                     .catch(function(error){
                         console.log(error);
                     });
-                this.$rejigger();
             }
         }
     };
