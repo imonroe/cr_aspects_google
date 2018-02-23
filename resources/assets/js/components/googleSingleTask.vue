@@ -49,12 +49,12 @@ export default {
             var fd_string = JSON.stringify(fd);
             this.$axios.post('/gtasks/task/complete', fd_string)
                 .then(function(response){
-                    console.log(response);
+                    self.$emit('refresh');
                 })
                 .catch(function(error){
                     console.log(error);
                 });
-            self.$emit('refresh');
+            
         }
     }
 };
