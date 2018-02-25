@@ -65,7 +65,7 @@
         ],
         computed: {
             coldreaderTheme: function(){
-                return this.$coldreaderTheme();
+                return this.$coldreaderTheme()
             }
         },
         methods: {
