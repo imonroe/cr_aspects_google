@@ -1,5 +1,9 @@
 <style scoped>
 
+ .calendar{
+     background-color:#ccc;
+ }
+
 </style>
 
 <template>
@@ -60,7 +64,9 @@
             'title'
         ],
         computed: {
-
+            coldreaderTheme: function(){
+                return this.$coldreaderTheme();
+            }
         },
         methods: {
             setCalendar(){
