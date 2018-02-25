@@ -65,11 +65,12 @@
         ],
         computed: {
             coldreaderTheme: function(){
-                return this.$coldreaderTheme()
+                return this.$coldreaderTheme();
             }
         },
         methods: {
             setCalendar(){
+                console.log('debug: '+this.$coldreaderTheme() );
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
                 this.dateChosen(this.currentDate);
