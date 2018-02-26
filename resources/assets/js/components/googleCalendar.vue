@@ -46,11 +46,13 @@
                 currentDate: '',
                 startDate: '',
                 endDate: '',
-                new_event_name: ''
+                new_event_name: '',
+                theme: null
             }
         },
         created() {
             this.setCalendar();
+            this.theme = this.coldreader;
         },
         props: [
             'aspectId',
@@ -64,13 +66,11 @@
             'title'
         ],
         computed: {
-            coldreaderTheme: function(){
-                return this.$coldreaderTheme();
-            }
+            
         },
         methods: {
             setCalendar(){
-                console.log('debug: '+this.$coldreaderTheme() );
+                console.log('calendar debug: '+ this.$coldreaderTheme() );
                 this.calendarId = this.settingsCalendarId;
                 this.currentDate = new Date();
                 this.dateChosen(this.currentDate);
