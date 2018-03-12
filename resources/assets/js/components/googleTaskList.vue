@@ -55,12 +55,13 @@ export default {
             .then(function(response){
                 self.taskList = response.data;
                 console.log(response.data);
+                self.$nextTick(function(){
+                    self.$rejigger();
+                });
             })
             .catch(function(error){
                 console.log(error);
             });
-            self.$rejigger();
-            
         }, 
         addNewTask(){
             var self = this;
