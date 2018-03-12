@@ -1,9 +1,5 @@
 <style scoped>
 
-    .vue__datepicker{
-      background-color: #CCC;
-    }
-
 </style>
 
 <template>
