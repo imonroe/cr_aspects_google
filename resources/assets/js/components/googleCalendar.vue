@@ -1,16 +1,12 @@
 <style scoped>
 
- .calendar{
-     background-color:#ccc;
- }
-
 </style>
 
 <template>
 
     <div >
 
-        <datepicker style="width:100%;" :value="currentDate" v-on:selected="dateChosen" :inline="true" :wrapper-class="vue__datepicker"></datepicker>
+        <datepicker style="width:100%;" :value="currentDate" v-on:selected="dateChosen" :inline="true" :wrapper-class=".vue__datepicker"></datepicker>
 
         <div style="margin-top: .5em; margin-bottom: .5em;"> 
             <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
