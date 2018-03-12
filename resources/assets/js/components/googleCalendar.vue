@@ -91,7 +91,9 @@
                     .then(function(response){
                         self.calendar = response;
                         console.log(response);
-                        self.$rejigger();
+                        self.$nextTick(function(){
+                            self.$rejigger('from google calendar');
+                        });
                     })
                     .catch(function(error){
                         console.log(error);
