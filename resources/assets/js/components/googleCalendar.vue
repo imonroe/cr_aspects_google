@@ -12,6 +12,7 @@
             <form id="new_event" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewEvent">
                 <div class="form-group">
                     <input type="text" class="form-control" id="new_event_name" name="new_event_name" placeholder="Add a event" v-model="new_event_name" >
+                    <input type="hidden" name="_token" :value="csrfToken"></input>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>

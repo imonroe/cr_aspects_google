@@ -15,6 +15,7 @@
             <input type="hidden" name="aspect_data" value=""></input>
             <input type="hidden" name="hidden" value="0"></input>
             <input type="hidden" name="aspect_source" value=""></input>
+            <input type="hidden" name="_token" :value="csrfToken"></input>
 
             <div class="form-group">
                 <label for="title">Title</label>
@@ -41,6 +42,7 @@
             <input type="hidden" name="aspect_data" value=""></input>
             <input type="hidden" name="hidden" value="0"></input>
             <input type="hidden" name="aspect_source" value=""></input>
+            <input type="hidden" name="_token" :value="csrfToken"></input>
 
             <div class="form-group">
                 <label for="title">Title</label>
@@ -61,7 +63,7 @@
         <p> - or - </p>
 
         <form id="new_google_task_list" class="form-inline my-2 my-lg-0" v-on:submit.prevent="createList">
-            <input type="hidden" name="_token" :value="csrf">
+            <input type="hidden" name="_token" :value="csrfToken"></input>
             <input type="hidden" name="action" value="add_task_list">
 
             <div class="form-group">

@@ -14,6 +14,7 @@
             <input type="hidden" name="task_list" :value="settingsListId">
             <div class="form-group">
                 <input type="text" class="form-control" id="new_task_title" name="new_task_title" placeholder="Add a new task" v-model="new_task_title" >
+                <input type="hidden" name="_token" :value="csrfToken"></input>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
