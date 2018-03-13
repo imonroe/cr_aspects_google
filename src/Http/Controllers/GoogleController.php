@@ -83,15 +83,18 @@ class GoogleController extends Controller{
 		 
 		$app_config = app('config')->get('services');
 		if ( !empty( $this->client ) ){
+
 			if ( !empty($this->user->google_token) ) {
 				// We have a token in the database.
 				$google_client_token = json_decode( $this->user->google_token, true );
 			} else {
 				// There is no token in the database.
 				$auth_url = $this->client->createAuthUrl();
-				return redirect($auth_url, 301);
+				return redirect()->away($auth_url);
 			}
+			
 			$this->client->setAccessToken(json_encode($google_client_token));
+			
 			if($this->client->isAccessTokenExpired()){
 				$this->client->setAccessType("refresh_token");
 				$this->client->refreshToken($google_client_token['refresh_token']);
@@ -99,6 +102,7 @@ class GoogleController extends Controller{
 				$this->user->google_token = json_encode($new_token);
 				$this->user->save();
 			}
+		
 		} else {
 			throw \Exception('No Google client available.');
 		}	
