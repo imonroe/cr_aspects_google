@@ -74,8 +74,6 @@ class GoogleController extends Controller{
 	}
 
 	public function build_client(){
-		// session([ 'oauth_redirect_request' => Ana::current_page_url() ]);
-		// Session::put('oauth_redirect_request', Ana::current_page_url());
 		// We need a user object.
 		if (Auth::check()){
 			$this->user = Auth::user();

@@ -23,6 +23,7 @@
                 <input type="hidden" name="subject_id" :value="subjectId"></input>
                 <input type="hidden" name="aspect_data" value=""></input>
                 <input type="hidden" name="hidden" value="0"></input>
+                <input type="hidden" name="_token" :value="csrfToken"></input>
                 <input type="hidden" name="aspect_source" value="Google"></input>
 
                 <div class="form-group">
