@@ -10,12 +10,18 @@ class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResu
 		return parent::notes_schema();
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
 	public function edit_form($id){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
+		$gc = new GoogleController;
+		$gc->build_client();
 		$output = '<p>Google Contacts API cached results</p>';
 		$decoded = json_decode($this->aspect_data, true);
 		//$decoded_str  = var_export($decoded, true);
@@ -83,12 +89,18 @@ class GoogleContactDataAspect extends \imonroe\crps\Aspect{
 		return parent::notes_schema();
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
 	public function edit_form($id){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
+		$gc = new GoogleController;
+		$gc->build_client();
 		$contact_array = json_decode($this->aspect_data, true);
 		$output = '';
 		if (!empty($contact_array['link'])){
@@ -215,11 +227,16 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		// Check to make sure we can create a client, if not we'll take care of it now.
+		$gc = new GoogleController;
+		$gc->build_client();
 		$output = '';
 		$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type="'.$aspect_type_id.'" ></new-google-tasklist>';
 		return $output;
 	}
 	public function edit_form($id){
+		$gc = new GoogleController;
+		$gc->build_client();
 		$settings = $this->get_aspect_notes_array();
 		$output = '';
 		$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type="'.$this->aspect_type.'" v-bind:aspect-id="'.$this->id.'" settings-list-id="'.$settings['list_id'].'" title="'.$this->title.'" ></new-google-tasklist>';
@@ -227,6 +244,8 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 	}
 
 	public function display_aspect(){
+		$gc = new GoogleController;
+		$gc->build_client();
 		$settings = $this->get_aspect_notes_array();
 		return '<google-tasklist settings-list-id="'.$settings['list_id'].'" ></google-tasklist>';
 	}
@@ -245,75 +264,21 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return '<new-google-calendar aspect-type="'. $this->aspect_type .'" subject-id="'.$subject_id.'"> </new-google-calendar>';
 	}
 	public function edit_form($id){
+		$gc = new GoogleController;
+		$gc->build_client();
 		return parent::edit_form($id);
 	}
 	public function display_aspect(){
+		$gc = new GoogleController;
+		$gc->build_client();
 		$settings = $this->get_aspect_notes_array();
 		return '<google-calendar aspect-data="" v-bind:aspect-id="'.$this->id.'" aspect-notes="" aspect-source="" v-bind:aspect-type="'.$this->aspect_type.'" settings-calendar-id="'.$settings['calendar_id'].'" v-bind:subject-id="'.$this->subject_id().'" ></google-calendar>';
 
-	}
-	public function OLD_display_aspect(){
-		$settings = (!is_null($this->aspect_notes)) ? json_decode($this->aspect_notes, true) : json_decode($this->notes_schema(), true);
-		$calendar_title = $settings['calendar_title'];
-		$csfr_token = csrf_token();
-		$spinner = '<center>'.\imonroe\ana\Ana::loading_spinner().'</center>';
-		$output = '';
-		$output .= <<<OUTPUT_STRING
-
-<div class="widget" id="google_calendar_{$settings['calendar_id']}">
-   
-   <div id="calendar_display_{$settings['calendar_id']}" style="float:left; width:255px;margin:.25em;"></div>
-
-   <div style="float:left; clear:none; margin:.5em;">
-	<form class="form-inline" id="new_appointment_form" style="margin-left:15px;">
-          <div class="form-group">
-          <input name="calendar_id" type="hidden" value="{$settings['calendar_id']}" />
-          <input name="action" type="hidden" value="new_appointment" />
- 		  <input name="_token" type="hidden" value="$csfr_token" />
-          <input name="new_appointment_txt" type="text" class="form-control" id="new_appointment_text" placeholder="Add a new appointment">
-          <button type="submit" class="btn" id="new_appointment_submit">Submit</button>
-          </div>
-        </form>
-        <div id="calendar_stage">
-			$spinner
-		</div>
-	</div>
-		<div style="clear:both;"></div>
-        <script type="text/javascript">
-			$(function(){
-			    // display datepicker
-				$("#calendar_display_{$settings['calendar_id']}").datepicker();
-				$("#new_appointment_form").submit(function(event){
-					event.preventDefault();
-					var fd = $(this).serialize();
-					var url = '/gcal';
-					$.ajax({
-							type: 'POST',
-							mimeType: 'multipart/form-data',
-							url: url,
-							data: fd
-					})
-					.done(function(html){
-							$.get( "/gcal")
-								.done(function( data ) {
-									$("#calendar_stage").html(data);
-								});
-							$("#new_appointment_form").trigger("reset");
-					});
-				});// end task submit
-
-				 $.get( "/gcal")
-					  .done(function( data ) {
-					  $("#calendar_stage").html(data);
-				  });
-			});
-        </script>
-</div>		
-OUTPUT_STRING;
-		return $output;
 	}
 	public function parse(){}
 
