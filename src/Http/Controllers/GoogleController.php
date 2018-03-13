@@ -85,24 +85,25 @@ class GoogleController extends Controller{
 		if ( !empty( $this->client ) ){
 
 			if ( !empty($this->user->google_token) ) {
+
 				// We have a token in the database.
 				$google_client_token = json_decode( $this->user->google_token, true );
+				$this->client->setAccessToken(json_encode($google_client_token));
+			
+				if($this->client->isAccessTokenExpired()){
+					$this->client->setAccessType("refresh_token");
+					$this->client->refreshToken($google_client_token['refresh_token']);
+					$new_token = $this->client->getAccessToken();
+					$this->user->google_token = json_encode($new_token);
+					$this->user->save();
+				}
+
 			} else {
 				// There is no token in the database.
 				$auth_url = $this->client->createAuthUrl();
-				return redirect()->away($auth_url);
+				redirect($auth_url);
 			}
 			
-			$this->client->setAccessToken(json_encode($google_client_token));
-			
-			if($this->client->isAccessTokenExpired()){
-				$this->client->setAccessType("refresh_token");
-				$this->client->refreshToken($google_client_token['refresh_token']);
-				$new_token = $this->client->getAccessToken();
-				$this->user->google_token = json_encode($new_token);
-				$this->user->save();
-			}
-		
 		} else {
 			throw \Exception('No Google client available.');
 		}	
