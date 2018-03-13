@@ -56,7 +56,7 @@ export default {
                 self.taskList = response.data;
                 console.log(response.data);
                 self.$nextTick(function(){
-                    self.$rejigger();
+                    self.$rejigger(); 
                 });
             })
             .catch(function(error){
