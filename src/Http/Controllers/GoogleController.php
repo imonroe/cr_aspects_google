@@ -91,8 +91,11 @@ class GoogleController extends Controller{
 				$auth_url = $this->client->createAuthUrl();
 				//Redirect::to($auth_url)->send();
 				//return redirect($auth_url, 301);
-				header('Location: '.$auth_url);
-				die();
+				//header('Location: '.$auth_url);
+				//die();
+				return response()->json([
+					'oauth_login_required' => $auth_url,
+				]);
 			}
 			$this->client->setAccessToken(json_encode($google_client_token));
 			if($this->client->isAccessTokenExpired()){
