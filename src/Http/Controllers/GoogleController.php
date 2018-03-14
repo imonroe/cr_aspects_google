@@ -3,7 +3,6 @@
 namespace imonroe\cr_aspects_google\Http\Controllers;
 
 use Auth;
-use Socialite;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,12 +35,6 @@ class GoogleController extends Controller{
 	protected $user;
 	
 	function __construct(){
-		//$this->middleware(function ($request, $next) {
-		//	$this->user = auth()->user();
-		//	return $next($request);
-		// });
-		// $this->build_client();
-		// dd('Middleware break', $this);
 		$app_config = app('config')->get('services');
 		if ( !empty($app_config['google']) ){
 			$this->google_config = $app_config['google'];
@@ -69,42 +62,50 @@ class GoogleController extends Controller{
 		}
 	}
 
+	public function set_user(){
+		if ( empty($this->user) ){
+			if ( Auth::check() ){
+				$this->user = Auth::user();
+			} else {
+				throw \Exception('User not logged in.');
+			}
+		}
+	}
+
+	public function has_authorized(){
+		try {
+			$this->set_user();
+		} catch (\Exception $e){
+			return false;
+		}
+
+		if ( !empty($this->user->google_token) ) {
+			return true;
+		} else {
+			$auth_url = $this->client->createAuthUrl();
+			header('Location: '.$auth_url);
+			exit;
+		}
+	}
+
 	public function get_client(){
 		return $this->client;
 	}
 
 	public function build_client(){
-		// We need a user object.
-		if (Auth::check()){
-			$this->user = Auth::user();
-		} else {
-			throw \Exception('User not logged in.');
-		}
-		$app_config = app('config')->get('services');
-		if ( !empty( $this->client ) ){
-			if ( !empty($this->user->google_token) ) {
-				// We have a token in the database.
-				$google_client_token = json_decode( $this->user->google_token, true );
-				$this->client->setAccessToken(json_encode($google_client_token));
-				if($this->client->isAccessTokenExpired()){
-					$this->client->setAccessType("refresh_token");
-					$this->client->refreshToken($google_client_token['refresh_token']);
-					$new_token = $this->client->getAccessToken();
-					$this->user->google_token = json_encode($new_token);
-					$this->user->save();
-				}
-			} else {
-				// There is no token in the database.
-				$auth_url = $this->client->createAuthUrl();
-				redirect($auth_url);
+		$this->set_user();
+		if ( !empty($this->client) && !empty($this->user) ){
+			$google_client_token = json_decode( $this->user->google_token, true );
+			$this->client->setAccessToken(json_encode($google_client_token));
+			if($this->client->isAccessTokenExpired()){
+				$this->client->setAccessType("refresh_token");
+				$this->client->refreshToken($google_client_token['refresh_token']);
+				$new_token = $this->client->getAccessToken();
+				$this->user->google_token = json_encode($new_token);
+				$this->user->save();
 			}
 		} else {
-			throw \Exception('No Google client available.');
-		}
-		if ( !empty( $this->user->google_token ) ){
-			return true;
-		} else {
-			return false;
+			throw \Exception('Cannot build Google Client.'); 
 		}
 	}
 
@@ -117,7 +118,6 @@ class GoogleController extends Controller{
 		$new_list = new Google_Service_Tasks_TaskList;
 		$new_list->setTitle( $input['task_list_name'] );
 		return json_encode( $tasklists->insert($new_list) );
-		//die();
 	}
 
 	public function task_list($task_list_id='@default'){
