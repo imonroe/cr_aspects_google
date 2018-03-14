@@ -228,26 +228,31 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
 		// Check to make sure we can create a client, if not we'll take care of it now.
-		$gc = new GoogleController;
-		$gc->build_client();
 		$output = '';
-		$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type="'.$aspect_type_id.'" ></new-google-tasklist>';
+		$gc = new GoogleController;
+		if ( $gc->build_client() ){
+			$output .= '<new-google-tasklist v-bind:subject-id="'.$subject_id.'" v-bind:aspect-type="'.$aspect_type_id.'" ></new-google-tasklist>';
+		}
 		return $output;
 	}
 	public function edit_form($id){
-		$gc = new GoogleController;
-		$gc->build_client();
-		$settings = $this->get_aspect_notes_array();
 		$output = '';
-		$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type="'.$this->aspect_type.'" v-bind:aspect-id="'.$this->id.'" settings-list-id="'.$settings['list_id'].'" title="'.$this->title.'" ></new-google-tasklist>';
+		$gc = new GoogleController;
+		if ( $gc->build_client() ){
+			$settings = $this->get_aspect_notes_array();
+			$output .= '<new-google-tasklist v-bind:subject-id="'.$this->subject_id().'" v-bind:aspect-type="'.$this->aspect_type.'" v-bind:aspect-id="'.$this->id.'" settings-list-id="'.$settings['list_id'].'" title="'.$this->title.'" ></new-google-tasklist>';
+		}
 		return $output;
 	}
 
 	public function display_aspect(){
+		$output = '';
 		$gc = new GoogleController;
-		$gc->build_client();
-		$settings = $this->get_aspect_notes_array();
-		return '<google-tasklist settings-list-id="'.$settings['list_id'].'" ></google-tasklist>';
+		if ( $gc->build_client() ){
+			$settings = $this->get_aspect_notes_array();
+			$output .= '<google-tasklist settings-list-id="'.$settings['list_id'].'" ></google-tasklist>';
+		}
+		return $output;
 	}
 
 	public function parse(){}
@@ -264,21 +269,28 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		$output = '';
 		$gc = new GoogleController;
-		$gc->build_client();
-		return '<new-google-calendar aspect-type="'. $this->aspect_type .'" subject-id="'.$subject_id.'"> </new-google-calendar>';
+		if ( $gc->build_client() ){
+			$output .= '<new-google-calendar aspect-type="'. $this->aspect_type .'" subject-id="'.$subject_id.'"> </new-google-calendar>';
+		}
+		return $output;
 	}
 	public function edit_form($id){
+		$output = '';
 		$gc = new GoogleController;
-		$gc->build_client();
-		return parent::edit_form($id);
+		if ( $gc->build_client() ){
+			$output .= parent::edit_form($id);
+		}
+		return $output;
 	}
 	public function display_aspect(){
+		$output = '';
 		$gc = new GoogleController;
-		$gc->build_client();
-		$settings = $this->get_aspect_notes_array();
-		return '<google-calendar aspect-data="" v-bind:aspect-id="'.$this->id.'" aspect-notes="" aspect-source="" v-bind:aspect-type="'.$this->aspect_type.'" settings-calendar-id="'.$settings['calendar_id'].'" v-bind:subject-id="'.$this->subject_id().'" ></google-calendar>';
-
+		if ( $gc->build_client() ){
+			$settings = $this->get_aspect_notes_array();
+			$output .= '<google-calendar aspect-data="" v-bind:aspect-id="'.$this->id.'" aspect-notes="" aspect-source="" v-bind:aspect-type="'.$this->aspect_type.'" settings-calendar-id="'.$settings['calendar_id'].'" v-bind:subject-id="'.$this->subject_id().'" ></google-calendar>';
+		}	
 	}
 	public function parse(){}
 
