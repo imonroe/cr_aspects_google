@@ -27,8 +27,17 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         $preferences_registry = app()->make('ApplicationPreferencesRegistry');
-        $google_pref = ['preference' => 'google_aspects_enabled', 'preference_label' => 'Enable Google Aspect Types?', 'field_type' => 'checkbox', 'default_value' => False ];
+        $google_pref = [
+            'preference' => 'google_aspects_enabled', 
+            'preference_label' => 'Enable Google Aspect Types?', 
+            'field_type' => 'checkbox', 
+            'default_value' => False 
+        ];
         $preferences_registry->register_preference($google_pref);
+
+        // initialize contacts
+        $google_controller = new \imonroe\cr_aspects_google\Http\Controllers\GoogleController;
+        $google_controller->initialize_contacts();
     }
 
     /**

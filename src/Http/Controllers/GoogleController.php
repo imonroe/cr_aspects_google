@@ -21,6 +21,7 @@ use Google_Http_Request;
 use Google_Service_Drive;
 
 use imonroe\ana\Ana;
+use imonroe\crps\SubjectType;
 use imonroe\cr_aspects_google\GoogleContactsAPIResultsAspect;
 use imonroe\cr_aspects_google\GoogleContactDataAspect;
 use imonroe\cr_aspects_google\GoogleTasksListAspect;
@@ -326,6 +327,17 @@ class GoogleController extends Controller{
 	}
 
 	// Contacts stuff
+
+	public function initialize_contacts(){
+		// Who are we working with?
+		if ($this->has_authorized()){
+			// check to see if we have a "Contacts" subject_type
+			$contacts_subject_type = SubjectType::where('type_name', '=', 'People')->limit(1)->get();
+			dd($contacts_subject_type);
+		}
+	}
+
+
 	public function get_contacts(){
 		// returns JSON formatted contact list from Google.
 		$request_url = 'https://www.google.com/m8/feeds/contacts/'.urlencode(env('APP_PRIMARY_USER_EMAIL')).'/full?max-results=2000&alt=json';
