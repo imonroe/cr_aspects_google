@@ -68,7 +68,8 @@ class GoogleController extends Controller{
 			if ( Auth::check() ){
 				$this->user = Auth::user();
 			} else {
-				throw \Exception('User not logged in.');
+				//throw \Exception('User not logged in.');
+				return redirect('login');
 			}
 		}
 	}

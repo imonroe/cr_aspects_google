@@ -35,9 +35,6 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
         ];
         $preferences_registry->register_preference($google_pref);
 
-        // initialize contacts
-        $google_controller = new \imonroe\cr_aspects_google\Http\Controllers\GoogleController;
-        $google_controller->initialize_contacts();
     }
 
     /**
