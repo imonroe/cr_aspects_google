@@ -193,12 +193,11 @@ class GoogleController extends Controller{
 	public function new_task(Request $request){
 		$this->build_client();
 		$input = $request->all();
-		dd($input);
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
-		$list_id = !empty($request->input('task_list')) ? $request->input('task_list') : '@default';
+		$list_id = $request->input('task_list', '@default');
 		$todo_service = new Google_Service_Tasks($this->client);
 		$task = new Google_Service_Tasks_Task();
-		$task->setTitle($request->input('new_task_title'));
+		$task->setTitle($request->input('new_task_title', 'empty'));
 		$task->setDue($today_timestamp);
 		$result = $todo_service->tasks->insert($list_id, $task);
 		echo('Got back: '.$result->getId());
