@@ -10,7 +10,7 @@
             <google-single-task :task="todo" :task-list="settingsListId" v-on:refresh="fetchList"></google-single-task> 
         </div>
 
-        <form id="new_task" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
+        <form :id="'new_task_'+settingsListId" class="form-inline my-2 my-lg-0" v-on:submit.prevent="addNewTask">
             <div class="form-group">
                 <input type="text" class="form-control" id="new_task_title" name="new_task_title" placeholder="Add a new task" v-model="new_task_title" >
                 <input type="hidden" name="task_list" :value="settingsListId">
@@ -67,7 +67,7 @@ export default {
         addNewTask(){
             var self = this;
             console.log('Trying to add new task: ' + self.new_task_title);
-            var fd = this.$jquery("#new_task").serialize();
+            var fd = self.$jquery("#new_task_"+self.settingsListId).serialize();
             this.$axios.post('/gtasks/task/add', fd)
             .then(function(response){
                 self.fetchList();
@@ -76,8 +76,6 @@ export default {
             .catch(function(error){
                 console.log(error);
             });
-            
-
         }
     }
 };
