@@ -14,10 +14,10 @@ class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResu
 		$gc->build_client();
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
-	public function edit_form($id){
+	public function edit_form(){
 		$gc = new GoogleController;
 		$gc->build_client();
-		return parent::edit_form($id);
+		return parent::edit_form();
 	}
 	public function display_aspect(){
 		$gc = new GoogleController;
@@ -93,10 +93,10 @@ class GoogleContactDataAspect extends \imonroe\crps\Aspect{
 		$gc->build_client();
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
-	public function edit_form($id){
+	public function edit_form(){
 		$gc = new GoogleController;
 		$gc->build_client();
-		return parent::edit_form($id);
+		return parent::edit_form();
 	}
 	public function display_aspect(){
 		$gc = new GoogleController;
@@ -235,7 +235,7 @@ class GoogleTasksListAspect extends \App\LamdaFunctionAspect{
 		}
 		return $output;
 	}
-	public function edit_form($id){
+	public function edit_form(){
 		$output = '';
 		$gc = new GoogleController;
 		if ( $gc->has_authorized() ){
@@ -276,11 +276,11 @@ class GoogleCalendarAspect extends \App\LamdaFunctionAspect{
 		}
 		return $output;
 	}
-	public function edit_form($id){
+	public function edit_form(){
 		$output = '';
 		$gc = new GoogleController;
 		if ( $gc->has_authorized() ){
-			$output .= parent::edit_form($id);
+			$output .= parent::edit_form();
 		}
 		return $output;
 	}
