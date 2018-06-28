@@ -221,7 +221,7 @@ class GoogleContactDataAspect extends \imonroe\crps\Aspect{
 	public function parse(){}
 }  // End of the GoogleContactDataAspectclass.
 
-class GoogleTasksListAspect extends LamdaFunctionAspect{
+class GoogleTasksListAspect extends LambdaFunctionAspect{
 	public function notes_schema(){
 		$settings = json_decode(parent::notes_schema(), true);
 		$settings['list_id'] = '@default';
@@ -262,7 +262,7 @@ class GoogleTasksListAspect extends LamdaFunctionAspect{
 	}
 }  // End of the GoogleTasksListAspectclass.
 
-class GoogleCalendarAspect extends LamdaFunctionAspect{
+class GoogleCalendarAspect extends LambdaFunctionAspect{
 
 	public function notes_schema(){
 		$settings = json_decode(parent::notes_schema(), true);
