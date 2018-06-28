@@ -4,6 +4,7 @@ namespace imonroe\cr_aspects_google;
 
 use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Redirect;
+use imonroe\cr_basic_aspects\LambdaFunctionAspect;
 
 class GoogleContactsAPIResultsAspect extends \imonroe\cr_network_aspects\APIResultAspect{
 	public function notes_schema(){
