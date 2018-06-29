@@ -70,8 +70,6 @@ class GoogleController extends Controller{
 				$user->save();
 			}
 			$this->client = $gc;
-			$this->user = $user;
-			$user = Auth::user();	
 			return $next($request);
 		});
 
@@ -82,8 +80,8 @@ class GoogleController extends Controller{
 	}
 
 	public function auth(){
-		$user = Auth::user();
-		$gct = session('google_token', $user->google_token);
+		$this->user = Auth::user();	
+		$gct = session('google_token', $this->user->google_token);
 		$google_client_token = json_decode( $gct, true );
 		if ( empty($google_client_token) ){
 			header('Location: '.$this->auth_url);
