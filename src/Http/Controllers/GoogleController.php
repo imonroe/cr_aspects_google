@@ -58,7 +58,7 @@ class GoogleController extends Controller{
 				if (empty($google_client_token)){
 					$auth_url = $gc->createAuthUrl();
 					header('Location: '.$auth_url);
-					exit;
+					die;
 				}
 				$gc->setAccessToken(json_encode($google_client_token));
 				if($gc->isAccessTokenExpired()){
