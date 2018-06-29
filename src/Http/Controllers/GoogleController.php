@@ -57,7 +57,8 @@ class GoogleController extends Controller{
 				$google_client_token = json_decode( $user->google_token, true );
 				if (empty($google_client_token)){
 					$auth_url = $gc->createAuthUrl();
-					return redirect()->away($auth_url);
+					Redirect::to($auth_url->send());
+					die();
 				}
 				$gc->setAccessToken(json_encode($google_client_token));
 				if($gc->isAccessTokenExpired()){
