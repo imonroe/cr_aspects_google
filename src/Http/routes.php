@@ -8,6 +8,7 @@ use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
     function () {
         Route::middleware(['web'])->group(function(){
+            
             // This is the route that handles OAuth2 callbacks from Google.
             Route::get('auth/google/callback', function(){
                 $req = request();
@@ -21,6 +22,7 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                     $google_client_token = $client->getAccessToken();
                     $user->google_token = json_encode($google_client_token);
                     $user->save();
+                    session(['google_token' => $user->google_token]);
                 } else {
                     throw \Exception('Couldn\'t get a token from Google.');
                 }

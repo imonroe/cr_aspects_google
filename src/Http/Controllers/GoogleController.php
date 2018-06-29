@@ -60,12 +60,7 @@ class GoogleController extends Controller{
 		}
 
 		$this->middleware(function($request, $next) use ($gc) {
-			$user = Auth::user();
-			$google_client_token = json_decode( $user->google_token, true );
-			if (empty($google_client_token)){
-				header('Location: '.$this->auth_url);
-				die();
-			}
+			$this->auth();
 			$gc->setAccessToken(json_encode($google_client_token));
 			if($gc->isAccessTokenExpired()){
 				$gc->setAccessType("refresh_token");
@@ -85,12 +80,11 @@ class GoogleController extends Controller{
 		return $this->client;
 	}
 
-	public function is_authorized(){
-		return !is_null($this->client->getAccessToken());
-	}
-
 	public function auth(){
-		if ( !$this->is_authorized() ){
+		$user = Auth::user();
+		$gct = session('google_token', $user->google_token);
+		$google_client_token = json_decode( $gct, true );
+		if ( empty($google_client_token) ){
 			header('Location: '.$this->auth_url);
 			die();
 		}
