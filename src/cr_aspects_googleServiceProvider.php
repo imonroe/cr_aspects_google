@@ -2,7 +2,9 @@
 
 namespace imonroe\cr_aspects_google;
 
+use Google_Client;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Storage;
 
 class cr_aspects_googleServiceProvider extends ServiceProvider
 {
@@ -24,7 +26,11 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
         //]);
 
         // Routes:
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/Http/routes.php');
+
+        $this->publishes([
+            __DIR__.'/config/google.php' => config_path('google.php'),
+        ]);
 
         $preferences_registry = app()->make('ApplicationPreferencesRegistry');
         $google_pref = [
@@ -34,7 +40,6 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
             'default_value' => False 
         ];
         $preferences_registry->register_preference($google_pref);
-
     }
 
     /**
@@ -42,8 +47,13 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-        //
+    public function register(){
+        $this->app->singleton('Google_Client', function ($app) {
+            $client = new Google_Client();
+            $client_secret = json_encode([ 'web' => config('services.google') ]);
+            Storage::disk('local')->put('client_secret.json', $client_secret);
+            $client->setAuthConfig(Storage::path('client_secret.json'));
+            return $client;
+        });
     }
 }

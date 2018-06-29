@@ -35,12 +35,6 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
             Route::post('gtasks/task/edit', 'GoogleController@edit_task');
             Route::post('gtasks/task/complete', 'GoogleController@complete_task');
             Route::post('gtasks/task/remove', 'GoogleController@remove_task');
-			//Route::get('gtasks/', 'GoogleController@display_task_list');
-            //Route::post('gtasks', 'GoogleController@edit_task_list');
-
-            // Routes for Google Calendar
-            //Route::get('gcal', 'GoogleController@get_calendar');
-            //Route::post('gcal', 'GoogleController@edit_calendar');
 
             Route::get('gcal/available_calendars', 'GoogleController@list_calendars');
             Route::get('gcal/calendar', 'GoogleController@get_calendar');
@@ -50,11 +44,10 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
             Route::post('gcal/event/create', 'GoogleController@create_event');
             Route::post('gcal/event/edit', 'GoogleController@edit_eventt');
             Route::post('gcal/event/delete', 'GoogleController@delete_event');
+        });
 
-
-            // Routes for Google Contacts
-
-
+        Route::middleware(['google'])->group(function(){
+            
         });
     }
 );

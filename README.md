@@ -1,13 +1,6 @@
-# cr_aspects_google
+# Google Aspect Types for Coldreader
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
-
-Custom Aspect Types for Coldreader, which implement Google APIs
+Aspect Types for [Coldreader](https://github.com/imonroe/coldreader), which implement Google APIs
 
 ## Install
 
@@ -15,6 +8,37 @@ Via Composer
 
 ``` bash
 $ composer require imonroe/cr_aspects_google
+```
+
+Add the following array to your `/config/services.php` file:
+```
+'google' => [
+        'application_name' => env('GOOGLE_API_APP_NAME'),
+        'client_id' => env('GOOGLE_API_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_API_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_API_REDIRECT'),
+        'public_api_key' => env('GOOGLE_API_PUBLIC_API_KEY'),
+        'auth_config_file' => env('GOOGLE_AUTH_CONFIG_FILE'),
+        'custom_search_api_key' => env('GOOGLE_CUSTOM_SEARCH_API_KEY'),
+        'custom_search_cz' => env('GOOGLE_CUSTOM_SEARCH_CZ'),
+        'static_maps_api_key' => env('GOOGLE_STATIC_MAPS_API_KEY'),
+    ],
+```
+
+
+
+Add the following to your .env file, along with the correct respective values:
+```
+GOOGLE_API_APP_NAME=YourAppName
+GOOGLE_PROJECT_ID=yourProjectID
+GOOGLE_API_CLIENT_ID=XXXX
+GOOGLE_API_CLIENT_SECRET=XXX
+GOOGLE_API_MAPS_API_KEY=
+GOOGLE_API_PUBLIC_API_KEY=XXX
+GOOGLE_API_REDIRECT=https://yoursite/auth/google/callback
+GOOGLE_CUSTOM_SEARCH_API_KEY=XXXX
+GOOGLE_CUSTOM_SEARCH_CZ=XXXX
+GOOGLE_STATIC_MAPS_API_KEY=XXXX
 ```
 
 ## Change log
