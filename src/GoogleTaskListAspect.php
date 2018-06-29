@@ -14,6 +14,7 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 	public function __construct(){
 		$gc = new GoogleController;
 		$this->gc = $gc;
+		$auth = $gc->is_authorized();
 	}
 
 	public function notes_schema(){

@@ -57,7 +57,7 @@ class GoogleController extends Controller{
 				$google_client_token = json_decode( $user->google_token, true );
 				if (empty($google_client_token)){
 					$auth_url = $gc->createAuthUrl();
-					Redirect::to($auth_url->send());
+					Redirect::to($auth_url)->send();
 					die();
 				}
 				$gc->setAccessToken(json_encode($google_client_token));
@@ -75,6 +75,11 @@ class GoogleController extends Controller{
 			}
 			return $next($request);
 		});
+	}
+
+	public function is_authorized(){
+		dd(get_class($this->client));
+		return is_a($this->client, 'Google_Client');
 	}
 
 	// Tasks stuff.
