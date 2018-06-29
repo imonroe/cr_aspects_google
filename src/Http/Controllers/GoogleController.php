@@ -36,46 +36,49 @@ class GoogleController extends Controller{
 	protected $auth_url;
 	
 	function __construct(){
-		$gc = resolve('Google_Client');
+		$app_config = app('config')->get('services');
+		$google_config = $app_config['google'];
+		if ( !empty($google_config) ){
+			$gc = resolve('Google_Client');
+			$scopes = [
+				"https://www.googleapis.com/auth/drive",
+				"https://www.googleapis.com/auth/calendar",
+				"https://www.googleapis.com/auth/tasks",
+				"https://www.googleapis.com/auth/userinfo.email",
+				"https://www.googleapis.com/auth/userinfo.profile",
+				"https://www.google.com/m8/feeds/",
+			];
+			$gc->addScope($scopes);
+			$gc->setApprovalPrompt("force");
+			$gc->setAccessType("offline");
+			$gc->setDeveloperKey( $google_config['public_api_key'] );
+			$gc->setApplicationName( $google_config['application_name'] );
+			$this->auth_url = $gc->createAuthUrl();
+			$this->client = $gc;
+		} else {
+			throw new \Exception('cr_aspects_google: Could not determine config. Is it set up right?');
+		}
+
 		$this->middleware(function($request, $next) use ($gc) {
-			$app_config = app('config')->get('services');
-			$google_config = $app_config['google'];
-			if ( !empty($google_config) ){
-				$scopes = [
-					"https://www.googleapis.com/auth/drive",
-					"https://www.googleapis.com/auth/calendar",
-					"https://www.googleapis.com/auth/tasks",
-					"https://www.googleapis.com/auth/userinfo.email",
-					"https://www.googleapis.com/auth/userinfo.profile",
-					"https://www.google.com/m8/feeds/",
-				];
-				$gc->addScope($scopes);
-				$gc->setApprovalPrompt("force");
-				$gc->setAccessType("offline");
-				$gc->setDeveloperKey( $google_config['public_api_key'] );
-				$gc->setApplicationName( $google_config['application_name'] );
-				$this->auth_url = $gc->createAuthUrl();
-				$user = Auth::user();
-				$google_client_token = json_decode( $user->google_token, true );
-				if (empty($google_client_token)){
-					header('Location: '.$this->auth_url);
-					die();
-				}
-				$gc->setAccessToken(json_encode($google_client_token));
-				if($gc->isAccessTokenExpired()){
-					$gc->setAccessType("refresh_token");
-					$gc->refreshToken($google_client_token['refresh_token']);
-					$new_token = $gc->getAccessToken();
-					$user->google_token = json_encode($new_token);
-					$user->save();
-				}
-				$this->client = $gc;
-				$this->user = $user;	
-			} else {
-				throw new \Exception('cr_aspects_google: Could not determine config. Is it set up right?');
+			$user = Auth::user();
+			$google_client_token = json_decode( $user->google_token, true );
+			if (empty($google_client_token)){
+				header('Location: '.$this->auth_url);
+				die();
 			}
+			$gc->setAccessToken(json_encode($google_client_token));
+			if($gc->isAccessTokenExpired()){
+				$gc->setAccessType("refresh_token");
+				$gc->refreshToken($google_client_token['refresh_token']);
+				$new_token = $gc->getAccessToken();
+				$user->google_token = json_encode($new_token);
+				$user->save();
+			}
+			$this->client = $gc;
+			$this->user = $user;	
 			return $next($request);
 		});
+
 	}
 
 	public function is_authorized(){
