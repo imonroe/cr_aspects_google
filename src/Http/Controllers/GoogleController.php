@@ -85,8 +85,8 @@ class GoogleController extends Controller{
 	public function auth(){
 		if ( !$this->is_authorized() ){
 			dd($this->auth_url);
-			header('Location: '.$this->auth_url);
-			die();
+			//header('Location: '.$this->auth_url);
+			//die();
 		}
 	}
 
