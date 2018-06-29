@@ -35,7 +35,7 @@ class GoogleController extends Controller{
 	protected $user;
 	
 	function __construct(){
-		$gc = $this->app->make('CR_Google_Client');
+		$gc = resolve('Google_Client');
 		$this->middleware(function($request, $next) use ($gc) {
 			$app_config = app('config')->get('services');
 			$google_config = $app_config['google'];
