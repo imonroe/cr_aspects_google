@@ -9,6 +9,13 @@ use imonroe\cr_basic_aspects\LambdaFunctionAspect;
 use imonroe\cr_network_aspects\APIResultAspect;
 
 class GoogleTasksListAspect extends LambdaFunctionAspect{
+	protected $gc;
+
+	public function __construct(){
+		$gc = new imonroe\cr_aspects_google\Http\Controllers\GoogleController;
+		$this->gc = $gc;
+	}
+
 	public function notes_schema(){
 		$settings = json_decode(parent::notes_schema(), true);
 		$settings['list_id'] = '@default';
