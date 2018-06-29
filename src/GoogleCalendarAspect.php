@@ -10,6 +10,12 @@ use imonroe\cr_network_aspects\APIResultAspect;
 
 class GoogleCalendarAspect extends LambdaFunctionAspect
 {
+    public function __construct()
+    {
+        $gc = new GoogleController;
+        $this->gc = $gc;
+    }
+
     public function notes_schema()
     {
         $settings = json_decode(parent::notes_schema(), true);
@@ -18,6 +24,7 @@ class GoogleCalendarAspect extends LambdaFunctionAspect
     }
     public function create_form($subject_id, $aspect_type_id = null)
     {
+        $this->gc->auth();
         $output = '';
         $gc = new GoogleController;
         $output .= '<new-google-calendar aspect-type="'. $this->aspect_type .'" subject-id="'.$subject_id.'"> </new-google-calendar>';
@@ -25,6 +32,7 @@ class GoogleCalendarAspect extends LambdaFunctionAspect
     }
     public function edit_form()
     {
+        $this->gc->auth();
         $output = '';
         $gc = new GoogleController;
         $output .= parent::edit_form();
@@ -32,6 +40,7 @@ class GoogleCalendarAspect extends LambdaFunctionAspect
     }
     public function display_aspect()
     {
+        $this->gc->auth();
         $output = '';
         $gc = new GoogleController;
         $settings = $this->get_aspect_notes_array();
