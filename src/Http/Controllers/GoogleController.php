@@ -68,8 +68,8 @@ class GoogleController extends Controller
                 $gc->setAccessType("refresh_token");
                 $gc->refreshToken($google_client_token['refresh_token']);
                 $new_token = $gc->getAccessToken();
-                $user->google_token = json_encode($new_token);
-                $user->save();
+                $this->user->google_token = json_encode($new_token);
+                $this->user->save();
             }
             $this->client = $gc;
             return $next($request);
