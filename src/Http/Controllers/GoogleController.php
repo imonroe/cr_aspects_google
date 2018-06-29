@@ -70,7 +70,8 @@ class GoogleController extends Controller{
 				$user->save();
 			}
 			$this->client = $gc;
-			$this->user = $user;	
+			$this->user = $user;
+			$user = Auth::user();	
 			return $next($request);
 		});
 
