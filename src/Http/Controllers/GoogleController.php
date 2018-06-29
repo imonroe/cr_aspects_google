@@ -82,7 +82,7 @@ class GoogleController extends Controller{
 	}
 
 	public function is_authorized(){
-		dd($this->user);
+		dd($this->client);
 		//return is_a($this->client, 'Google_Client');
 	}
 
