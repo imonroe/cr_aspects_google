@@ -12,7 +12,7 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 	protected $gc;
 
 	public function __construct(){
-		$gc = new imonroe\cr_aspects_google\Http\Controllers\GoogleController;
+		$gc = new GoogleController;
 		$this->gc = $gc;
 	}
 
