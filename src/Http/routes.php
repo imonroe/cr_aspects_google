@@ -16,7 +16,7 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
                 $user = Auth::user();
                 $gc = new GoogleController;
                 $client = $gc->get_client();
-                if ( !empty($code) && !empty($user) && !empty($user) ){
+                if ( !empty($code) && !empty($user) && !empty($client) ){
                     $client->authenticate($code);
                     $google_client_token = $client->getAccessToken();
                     $user->google_token = json_encode($google_client_token);

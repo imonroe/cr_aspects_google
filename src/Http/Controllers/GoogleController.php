@@ -81,15 +81,16 @@ class GoogleController extends Controller{
 
 	}
 
+	public function get_client(){
+		return $this->client;
+	}
+
 	public function is_authorized(){
-		//dd($this->client->getAccessToken());
 		return !is_null($this->client->getAccessToken());
-		
 	}
 
 	public function auth(){
 		if ( !$this->is_authorized() ){
-			//dd($this->auth_url);
 			header('Location: '.$this->auth_url);
 			die();
 		}
