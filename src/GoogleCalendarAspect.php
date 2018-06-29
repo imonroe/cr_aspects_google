@@ -10,6 +10,8 @@ use imonroe\cr_network_aspects\APIResultAspect;
 
 class GoogleCalendarAspect extends LambdaFunctionAspect
 {
+    protected $gc;
+    
     public function __construct()
     {
         $gc = new GoogleController;
