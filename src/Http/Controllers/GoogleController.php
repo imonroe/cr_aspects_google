@@ -33,6 +33,7 @@ use Snoopy\Snoopy;
 class GoogleController extends Controller{
 	protected $client;
 	protected $user;
+	protected $auth_url;
 	
 	function __construct(){
 		$gc = resolve('Google_Client');
@@ -53,11 +54,11 @@ class GoogleController extends Controller{
 				$gc->setAccessType("offline");
 				$gc->setDeveloperKey( $google_config['public_api_key'] );
 				$gc->setApplicationName( $google_config['application_name'] );
+				$this->auth_url = $gc->createAuthUrl();
 				$user = Auth::user();
 				$google_client_token = json_decode( $user->google_token, true );
 				if (empty($google_client_token)){
-					$auth_url = $gc->createAuthUrl();
-					Redirect::to($auth_url)->send();
+					header('Location: '.$this->auth_url);
 					die();
 				}
 				$gc->setAccessToken(json_encode($google_client_token));
@@ -79,6 +80,13 @@ class GoogleController extends Controller{
 
 	public function is_authorized(){
 		return is_a($this->client, 'Google_Client');
+	}
+
+	public function auth(){
+		if ( !$this->is_authorized() ){
+			header('Location: '.$this->auth_url);
+			die();
+		}
 	}
 
 	// Tasks stuff.

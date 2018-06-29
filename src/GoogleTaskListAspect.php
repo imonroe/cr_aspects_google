@@ -14,7 +14,6 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 	public function __construct(){
 		$gc = new GoogleController;
 		$this->gc = $gc;
-		$auth = $gc->is_authorized();
 	}
 
 	public function notes_schema(){
@@ -23,6 +22,7 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 		return json_encode($settings);
 	}
 	public function create_form($subject_id, $aspect_type_id=null){
+		$this->gc->auth();
 		// Check to make sure we can create a client, if not we'll take care of it now.
 		$output = '';
 		$gc = new GoogleController;
@@ -30,6 +30,7 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 		return $output;
 	}
 	public function edit_form(){
+		$this->gc->auth();
 		$output = '';
 		$gc = new GoogleController;
 		$settings = $this->get_aspect_notes_array();
@@ -38,6 +39,7 @@ class GoogleTasksListAspect extends LambdaFunctionAspect{
 	}
 
 	public function display_aspect(){
+		$this->gc->auth();
 		$output = '';
 		$gc = new GoogleController;
 		$settings = $this->get_aspect_notes_array();
