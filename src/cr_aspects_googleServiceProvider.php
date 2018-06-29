@@ -22,7 +22,7 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
         // Views:
         //$this->loadViewsFrom(__DIR__.'/path/to/views', 'courier');
         //$this->publishes([
-        //	__DIR__.'/path/to/views' => resource_path('views/vendor/courier'),
+        //  __DIR__.'/path/to/views' => resource_path('views/vendor/courier'),
         //]);
 
         // Routes:
@@ -34,10 +34,10 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
 
         $preferences_registry = app()->make('ApplicationPreferencesRegistry');
         $google_pref = [
-            'preference' => 'google_aspects_enabled', 
-            'preference_label' => 'Enable Google Aspect Types?', 
-            'field_type' => 'checkbox', 
-            'default_value' => False 
+            'preference' => 'google_aspects_enabled',
+            'preference_label' => 'Enable Google Aspect Types?',
+            'field_type' => 'checkbox',
+            'default_value' => false
         ];
         $preferences_registry->register_preference($google_pref);
     }
@@ -47,7 +47,8 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(){
+    public function register()
+    {
         $this->app->singleton('Google_Client', function ($app) {
             $client = new Google_Client();
             $client_secret = json_encode([ 'web' => config('google') ]);

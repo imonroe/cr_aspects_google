@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -7,17 +7,17 @@ use imonroe\cr_aspects_google\Http\Controllers\GoogleController;
 
 Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
     function () {
-        Route::middleware(['web'])->group(function(){
+        Route::middleware(['web'])->group(function () {
             
             // This is the route that handles OAuth2 callbacks from Google.
-            Route::get('auth/google/callback', function(){
+            Route::get('auth/google/callback', function () {
                 $req = request();
                 $code = $req->query('code');
                 $session = $req->session();
                 $user = Auth::user();
                 $gc = new GoogleController;
                 $client = $gc->get_client();
-                if ( !empty($code) && !empty($user) && !empty($client) ){
+                if (!empty($code) && !empty($user) && !empty($client)) {
                     $client->authenticate($code);
                     $google_client_token = $client->getAccessToken();
                     $user->google_token = json_encode($google_client_token);
@@ -48,8 +48,7 @@ Route::namespace('imonroe\cr_aspects_google\Http\Controllers')->group(
             Route::post('gcal/event/delete', 'GoogleController@delete_event');
         });
 
-        Route::middleware(['google'])->group(function(){
-            
+        Route::middleware(['google'])->group(function () {
         });
     }
 );
