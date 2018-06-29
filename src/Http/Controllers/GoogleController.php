@@ -60,7 +60,7 @@ class GoogleController extends Controller{
 		}
 
 		$this->middleware(function($request, $next) use ($gc) {
-			$this->auth();
+			$google_client_token = $this->auth();
 			$gc->setAccessToken(json_encode($google_client_token));
 			if($gc->isAccessTokenExpired()){
 				$gc->setAccessType("refresh_token");
@@ -88,6 +88,7 @@ class GoogleController extends Controller{
 			header('Location: '.$this->auth_url);
 			die();
 		}
+		return $google_client_token;
 	}
 
 	// Tasks stuff.
