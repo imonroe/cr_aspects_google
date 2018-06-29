@@ -34,7 +34,7 @@ class GoogleController extends Controller{
 	protected $client;
 	protected $user;
 	
-	function __construct(Google_Client $gc){
+	function __construct(CR_Google_Client $gc){
 		$this->middleware(function($request, $next) use ($gc) {
 			//$google_client_token = json_decode( Auth::user()->google_token, true );
 			//$gc->refreshToken()

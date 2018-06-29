@@ -48,9 +48,9 @@ class cr_aspects_googleServiceProvider extends ServiceProvider
      * @return void
      */
     public function register(){
-        $this->app->singleton('Google_Client', function ($app) {
+        $this->app->singleton('CR_Google_Client', function ($app) {
             $client = new Google_Client();
-            $client_secret = json_encode([ 'web' => config('services.google') ]);
+            $client_secret = json_encode([ 'web' => config('google') ]);
             Storage::disk('local')->put('client_secret.json', $client_secret);
             $client->setAuthConfig(Storage::path('client_secret.json'));
             return $client;
