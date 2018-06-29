@@ -31,89 +31,55 @@ use Carbon\Carbon;
 use Snoopy\Snoopy;
 
 class GoogleController extends Controller{
-	protected $google_config;
 	protected $client;
 	protected $user;
 	
-	function __construct(){
-		$app_config = app('config')->get('services');
-		if ( !empty($app_config['google']) ){
-			$this->google_config = $app_config['google'];
-			$scopes = [
-				"https://www.googleapis.com/auth/drive",
-				"https://www.googleapis.com/auth/calendar",
-				"https://www.googleapis.com/auth/tasks",
-				"https://www.googleapis.com/auth/userinfo.email",
-				"https://www.googleapis.com/auth/userinfo.profile",
-				"https://www.google.com/m8/feeds/",
-			];
-			$client = new Google_Client();
-			$client->setApplicationName( $this->google_config['application_name'] );
-			$client->setAuthConfig( $this->google_config['auth_config_file'] );
-			$client->addScope($scopes);
-			$client->setClientId( $this->google_config['client_id'] );
-			$client->setClientSecret( $this->google_config['client_secret'] );
-			$client->setDeveloperKey( $this->google_config['public_api_key'] );
-			$client->setAccessType("offline");
-			$client->setApprovalPrompt("force");  // Disable after debugging. Forces a refresh token.
-			$client->setRedirectUri( env('APP_URL') . '/auth/google/callback' );
-			$this->client = $client;
-		} else {
-			throw \Exception('No Google Configuration found.');
-		}
-	}
-
-	public function set_user(){
-		if ( empty($this->user) ){
-			if ( Auth::check() ){
-				$this->user = Auth::user();
+	function __construct(Google_Client $gc){
+		$this->middleware(function($request, $next) use ($gc) {
+			//$google_client_token = json_decode( Auth::user()->google_token, true );
+			//$gc->refreshToken()
+			$app_config = app('config')->get('services');
+			$google_config = $app_config['google'];
+			if ( !empty($google_config) ){
+				$scopes = [
+					"https://www.googleapis.com/auth/drive",
+					"https://www.googleapis.com/auth/calendar",
+					"https://www.googleapis.com/auth/tasks",
+					"https://www.googleapis.com/auth/userinfo.email",
+					"https://www.googleapis.com/auth/userinfo.profile",
+					"https://www.google.com/m8/feeds/",
+				];
+				$gc->addScope($scopes);
+				$gc->setApprovalPrompt("force");
+				$gc->setAccessType("offline");
+				$gc->setDeveloperKey( $google_config['public_api_key'] );
+				$gc->setApplicationName( $google_config['application_name'] );
+				$user = Auth::user();
+				$google_client_token = json_decode( $user->google_token, true );
+				if (empty($google_client_token)){
+					$auth_url = $gc->createAuthUrl();
+					header('Location: '.$auth_url);
+					exit;
+				}
+				$gc->setAccessToken(json_encode($google_client_token));
+				if($gc->isAccessTokenExpired()){
+					$gc->setAccessType("refresh_token");
+					$gc->refreshToken($google_client_token['refresh_token']);
+					$new_token = $gc->getAccessToken();
+					$user->google_token = json_encode($new_token);
+					$user->save();
+				}
+				$this->client = $gc;
+				$this->user = $user;	
 			} else {
-				//throw \Exception('User not logged in.');
-				return redirect('login');
+				throw new \Exception('cr_aspects_google: Could not determine config. Is it set up right?');
 			}
-		}
-	}
-
-	public function has_authorized(){
-		try {
-			$this->set_user();
-		} catch (\Exception $e){
-			return false;
-		}
-
-		if ( !empty($this->user->google_token) ) {
-			return true;
-		} else {
-			$auth_url = $this->client->createAuthUrl();
-			header('Location: '.$auth_url);
-			exit;
-		}
-	}
-
-	public function get_client(){
-		return $this->client;
-	}
-
-	public function build_client(){
-		$this->set_user();
-		if ( !empty($this->client) && !empty($this->user) ){
-			$google_client_token = json_decode( $this->user->google_token, true );
-			$this->client->setAccessToken(json_encode($google_client_token));
-			if($this->client->isAccessTokenExpired()){
-				$this->client->setAccessType("refresh_token");
-				$this->client->refreshToken($google_client_token['refresh_token']);
-				$new_token = $this->client->getAccessToken();
-				$this->user->google_token = json_encode($new_token);
-				$this->user->save();
-			}
-		} else {
-			throw \Exception('Cannot build Google Client.'); 
-		}
+			return $next($request);
+		});
 	}
 
 	// Tasks stuff.
 	public function new_task_list(Request $request){
-		$this->build_client();
 		$input = $request->all();
 		$tasks_service = new Google_Service_Tasks($this->client);
 		$tasklists = $tasks_service->tasklists;
@@ -153,8 +119,7 @@ class GoogleController extends Controller{
 				]
 				#processed: []
 			}
-		*/
-		$this->build_client();	
+		*/	
 		$tomorrow = strtotime('+1 day');
 		$tomorrow_timestamp = date(DATE_RFC3339, $tomorrow);
 		//$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
@@ -172,7 +137,6 @@ class GoogleController extends Controller{
 	}
 
 	public function display_task_list($task_list_id='@default'){
-		$this->build_client();
 		$tomorrow = strtotime('+1 day');
 		$tomorrow_timestamp = date(DATE_RFC3339, $tomorrow);
 		$tasks_service = new Google_Service_Tasks($this->client);
@@ -185,13 +149,11 @@ class GoogleController extends Controller{
 	}
 	
 	public function get_all_task_lists(){
-		$this->build_client();
 		$tasksService = new Google_Service_Tasks($this->client);
  		return json_encode($tasksService->tasklists->listTasklists());
 	}
 
 	public function new_task(Request $request){
-		$this->build_client();
 		$input = $request->all();
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
 		$list_id = $request->input('task_list', '@default');
@@ -204,53 +166,39 @@ class GoogleController extends Controller{
 	}
 
 	public function edit_task(Request $request){
-		$this->build_client();
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
-
 	}
 
 	public function complete_task(Request $request){
-		$this->build_client();
 		$input = $request->json()->all();
-		
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
-		
 		$list_id = !empty($input['list_id']) ? $input['list_id'] : '@default';
-		
 		$todo_service = new Google_Service_Tasks($this->client);
 		$gtask = $todo_service->tasks->get($list_id, $input['task_id'] );
 		$gtask->setStatus('completed');
-
 		$result = $todo_service->tasks->update($list_id, $input['task_id'], $gtask);
 		echo( 'Got back: '.json_encode($result) );
 	}
 
 	public function remove_task(Request $request){
 		$today_timestamp = date(DATE_RFC3339, strtotime('today 11:59PM'));
-
 	}
 
 
 	// Calendar stuff.
 	public function list_calendars(Request $request){
-		
-		$this->build_client();
 		$calendar_service = new Google_Service_Calendar($this->client);
 		$calendar_list = $calendar_service->calendarList->listCalendarList();
 		return json_encode($calendar_list);
-
 	}
 	public function create_calendar(Request $request){
-		$this->build_client();
+		
 	}
 	public function get_calendar(Request $request){
-		$this->build_client();
 		$input = $request->all();
 		$calendar_id = ( !empty($input['calendar_id']) ) ? $input['calendar_id'] : 'primary';
-
 		$start_time = ( !empty($input['start_date']) ) ? Ana::google_datetime( strtotime($input['start_date']) ) : Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60)));
 		$end_time = ( !empty( $input['end_date'] ) ) ? Ana::google_datetime( strtotime($input['end_date']) )  : Ana::google_datetime(strtotime('tomorrow 3:00AM'));
-
 		$calendar_service = new Google_Service_Calendar($this->client);
 		$optParams = array(
 			'timeMin' => $start_time,
@@ -258,61 +206,21 @@ class GoogleController extends Controller{
 			'singleEvents' => true,
 			'timeMax' => $end_time,
 		);
-		//dd($input, $optParams);
 		$event_list = $calendar_service->events->listEvents($calendar_id, $optParams);
 		return json_encode($event_list);
 	}
 
-	public function get_event(Request $request){
-		$this->build_client();
-	}
+	public function get_event(Request $request){}
 	public function create_event(Request $request){
-		$this->build_client();
 		$input = $request->json()->all();
-
 		$calendar_id = (!empty($input['calendar_id'])) ? $input['calendar_id'] : 'primary';
 		$new_event_name = $input['new_event_name'];
-
 		$calendar_service = new Google_Service_Calendar($this->client);
 		$result = $calendar_service->events->quickAdd( $calendar_id, $new_event_name );
 		return json_encode($result);
 	}
-	public function edit_event(Request $request){
-		$this->build_client();
-	}
-	public function delete_event(Request $request){
-		$this->build_client();
-	}
-
-
-	public function get_calendar_old($calendar_id='primary'){
-		$calendar_service = new Google_Service_Calendar($this->client);
-		$optParams = array(
-			'timeMin' => Ana::google_datetime(strtotime(Carbon::now()->subMinutes(60))),
-			'orderBy' => 'startTime',
-			'singleEvents' => true,
-			'timeMax' =>Ana::google_datetime(strtotime('tomorrow 3:00AM')),
-		);
-		$event_list = $calendar_service->events->listEvents($calendar_id, $optParams);
-		$output = '';
-		$output .= '<ul id="calendar_agenda">';
-		foreach($event_list->items as $event){
-			$output .=  '<li>'.$event['summary'].' - '.Ana::standard_date_format(strtotime($event['start']['dateTime'])).'</li>';
-		}
-		$output .=  '</ul>';
-		return $output;
-	}
-
-	public function edit_calendar_old(Request $request){
-		switch($request->input('action')){
-			case "new_appointment":
-				$calendar_service = new Google_Service_Calendar($this->client);
-				$result = $calendar_service->events->quickAdd( 'primary', $request->input('new_appointment_txt') );
-				echo('Got back: '.$result->getId());
-				break;
-		}
-	}
-
+	public function edit_event(Request $request){}
+	public function delete_event(Request $request){}
 
 	// Search stuff
 	public function google_search($query){
@@ -328,24 +236,6 @@ class GoogleController extends Controller{
 		return $results_array;
 	}
 
-	// Contacts stuff
-
-	public function initialize_contacts(){
-		// Who are we working with?
-		if ($this->has_authorized()){
-			// check to see if we have a "Contacts" subject_type
-			$contacts_subject_type = SubjectType::where('type_name', '=', 'People')->limit(1)->get();
-			dd($contacts_subject_type);
-		}
-	}
-
-
-	public function get_contacts(){
-		// returns JSON formatted contact list from Google.
-		$request_url = 'https://www.google.com/m8/feeds/contacts/'.urlencode(env('APP_PRIMARY_USER_EMAIL')).'/full?max-results=2000&alt=json';
-		return $this->get_authenticated_url($request_url);
-	}
-
 	// General functions
 	public function get_authenticated_url($request_url){
 		$token = $this->client->getAccessToken();
@@ -353,7 +243,6 @@ class GoogleController extends Controller{
 		$header[] = "Content-type: application/atom+xml"; 
 		$header[] = 'Authorization: OAuth '.$token['access_token'];
 		$header[] = 'GData-Version: 3.0';
-
 		$curl = curl_init();
  		curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		curl_setopt($curl, CURLOPT_HTTPGET, true);
@@ -410,6 +299,4 @@ class GoogleController extends Controller{
 		} while ($pageToken != null);
 		return $output;
 	}
-
-
 }
